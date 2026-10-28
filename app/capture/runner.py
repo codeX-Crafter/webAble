@@ -88,7 +88,8 @@ class BrowserCapture:
                 try:
                     browser = await playwright.chromium.launch()
                     context = await browser.new_context(
-                        viewport={"width": width, "height": height}
+                        viewport={"width": width, "height": height},
+                        service_workers="block",
                     )
                     page = await context.new_page()
                 except PlaywrightError as error:

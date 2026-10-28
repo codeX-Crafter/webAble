@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Keyboard focus edge cases</title>
+  <style>
+    #ancestor:focus-within::after {
+      content: "";
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 4px;
+      outline: 2px solid blue;
+    }
+    #partial-cover {
+      position: fixed;
+      z-index: 99;
+      top: 0;
+      left: 0;
+      width: 15px;
+      height: 15px;
+      background: rgba(0, 0, 0, .4);
+    }
+  </style>
+</head>
+<body>
+  <button id="positive-tabindex" tabindex="4" type="button">Positive index</button>
+  <button id="zero-tabindex" tabindex="0" type="button">Zero index</button>
+  <div id="ancestor"><button id="ancestor-indicator" type="button">Ancestor indicator</button></div>
+  <label><input id="radio-one" type="radio" name="choice">One</label>
+  <label><input id="radio-two" type="radio" name="choice">Two</label>
+  <button id="trigger" type="button">Trigger focus addition</button>
+  <div id="shadow-host"></div>
+  <div id="partial-cover"></div>
+  <script>
+    const root = document.getElementById("shadow-host").attachShadow({mode: "open"});
+    root.innerHTML = '<button id="shadow-button" type="button">Shadow button</button>';
+    document.addEventListener("keydown", event => {
+      if (event.key === "Tab" && !document.getElementById("dynamic")) {
+        const button = document.createElement("button");
+        button.id = "dynamic";
+        button.type = "button";
+        button.textContent = "Dynamic button";
+        document.body.append(button);
+      }
+    }, {once: true, capture: true});
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Text availability review cases</title>
+  <style>
+    #ellipsis {
+      display: block;
+      width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    #disclosed {
+      height: 24px;
+      overflow: hidden;
+      line-height: 20px;
+    }
+    #inherited {
+      font-size: 18px;
+    }
+    #nested {
+      display: inline-block;
+      width: 90px;
+      height: 22px;
+      overflow: hidden;
+      font-size: 1.25em;
+      line-height: 20px;
+    }
+  </style>
+</head>
+<body>
+  <a id="ellipsis" href="#full-content"
+     aria-label="The full text remains available to assistive technology">
+    The full text remains available to assistive technology
+  </a>
+  <section>
+    <p id="disclosed" aria-describedby="full-content">
+      The complete disclosure text is clipped in this preview.
+    </p>
+    <details id="full-disclosure">
+      <summary>Read the complete text</summary>
+      <p id="full-content">The complete disclosure text is available on request.</p>
+    </details>
+  </section>
+  <p id="inherited">
+    Inherited text <span id="nested">Nested relative text is clipped.</span>
+  </p>
+</body>
+</html>

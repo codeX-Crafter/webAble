@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Keyboard focus obscured fixture</title>
+  <style>
+    #cover { position: fixed; inset: 0; z-index: 99; background: rgba(0,0,0,.2); }
+  </style>
+</head>
+<body>
+  <button id="covered" type="button">Covered control</button>
+  <div id="cover" aria-hidden="true"></div>
+</body>
+</html>

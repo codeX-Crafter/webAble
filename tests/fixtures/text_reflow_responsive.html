@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Responsive content replacement</title>
+  <style>
+    #mobile-copy { display: none; }
+    @media (max-width: 400px) {
+      #desktop-copy { display: none; }
+      #mobile-copy { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <p id="desktop-copy">Desktop-specific instructions.</p>
+  <p id="mobile-copy">Mobile-specific instructions.</p>
+</body>
+</html>

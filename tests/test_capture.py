@@ -13,6 +13,8 @@ from app.analyzers.element_horizontal_overflow import (
     diagnose_element_horizontal_overflow,
 )
 from app.analyzers.element_layout_evidence import enrich_element_layout_evidence
+from app.analyzers.keyboard_focus import audit_keyboard_focus
+from app.analyzers.text_reflow import audit_text_reflow
 from app.capture.runner import BrowserCapture
 from app.capture.responsive import capture_responsive_viewports
 from app.capture.storage import LocalScreenshotStorage
@@ -59,6 +61,23 @@ class FixtureHandler(BaseHTTPRequestHandler):
             "/blocked-resource": "blocked_resource.html",
             "/functional-ux": "functional_ux.html",
             "/accessibility": "accessibility.html",
+            "/keyboard-visible": "keyboard_focus_visible.html",
+            "/keyboard-absent": "keyboard_focus_absent.html",
+            "/keyboard-skipped": "keyboard_focus_skipped.html",
+            "/keyboard-trap": "keyboard_focus_trap.html",
+            "/keyboard-overlay": "keyboard_focus_overlay.html",
+            "/keyboard-none": "keyboard_focus_none.html",
+            "/keyboard-unsafe": "keyboard_focus_unsafe.html",
+            "/keyboard-edge-cases": "keyboard_focus_edge_cases.html",
+            "/text-reflow-usable": "text_reflow_usable.html",
+            "/text-reflow-clipped": "text_reflow_clipped.html",
+            "/text-reflow-overlap": "text_reflow_overlap.html",
+            "/text-reflow-wide": "text_reflow_wide.html",
+            "/text-reflow-table": "text_reflow_table.html",
+            "/text-reflow-unbreakable": "text_reflow_unbreakable.html",
+            "/text-reflow-dynamic": "text_reflow_dynamic.html",
+            "/text-reflow-review": "text_reflow_review.html",
+            "/text-reflow-responsive": "text_reflow_responsive.html",
         }.get(path, "normal.html")
         body = (FIXTURES / fixture).read_bytes()
         self.send_response(200)
@@ -192,6 +211,28 @@ def test_capture_endpoint_returns_200_for_local_fixture(
     assert all("accessibility_scan" in item for item in viewports)
     assert all(item["accessibility_scan"]["status"] == "available" for item in viewports)
     assert all(item["accessibility_scan"]["axe_version"] == "4.14.0" for item in viewports)
+    assert all("text_reflow_audit" in item for item in viewports)
+    assert all(
+        next(
+            scenario for scenario in item["text_reflow_audit"]["scenarios"]
+            if scenario["scenario_id"] == "browser_zoom_200_percent"
+        )["status"] == "unsupported"
+        for item in viewports
+    )
+    assert all(
+        next(
+            scenario for scenario in item["text_reflow_audit"]["scenarios"]
+            if scenario["scenario_id"] == "baseline"
+        )["screenshot_ref"] == item["screenshot_ref"]
+        for item in viewports
+    )
+    assert all("keyboard_focus_audit" in item for item in viewports)
+    assert all(
+        item["keyboard_focus_audit"]["status"] in {
+            "available", "partial", "unavailable", "not_tested"
+        }
+        for item in viewports
+    )
     assert all("finding_normalization" in item for item in viewports)
     audit_findings = response.json()["audit_findings"]
     assert audit_findings["status"] == "available"
@@ -223,6 +264,54 @@ def test_capture_endpoint_returns_200_for_local_fixture(
         assert finding["selector"] == "#oversized"
         assert finding["viewport_name"] == viewport["name"]
         assert finding["evidence_correlation"] == "direct_geometry_match"
+
+
+def test_playwright_reflow_failure_preserves_results_and_closes_contexts(
+    fixture_server, tmp_path, monkeypatch
+):
+    import app.capture.runner as runner
+    import app.capture.responsive as responsive
+
+    closed_resources = []
+    original_close_resources = runner._close_resources
+
+    async def track_resource_cleanup(page, context, browser):
+        closed_resources.append((page, context, browser))
+        return await original_close_resources(page, context, browser)
+
+    original_keyboard_audit = responsive.audit_keyboard_focus
+
+    async def cause_browser_evaluation_failure(page):
+        result = await original_keyboard_audit(page)
+        await page.evaluate(
+            "window.getComputedStyle = () => { throw new Error('fixture failure'); }"
+        )
+        return result
+
+    monkeypatch.setattr(runner, "_close_resources", track_resource_cleanup)
+    monkeypatch.setattr(
+        responsive, "audit_keyboard_focus", cause_browser_evaluation_failure
+    )
+    service = BrowserCapture(
+        storage=LocalScreenshotStorage(tmp_path),
+        url_validator=LocalhostValidator(),
+        settling_period_ms=25,
+    )
+    results = asyncio.run(
+        responsive.capture_responsive_viewports(
+            f"{fixture_server}/normal", service.capture
+        )
+    )
+
+    assert len(results) == 3
+    assert all(result.capture_outcome == "completed" for result in results)
+    assert all(result.screenshot_ref for result in results)
+    assert all(result.overflow_analysis_status == "available" for result in results)
+    assert all(result.accessibility_scan.status == "available" for result in results)
+    assert all(result.text_reflow_audit.status == "unavailable" for result in results)
+    assert len(closed_resources) == 3
+    assert all(page.is_closed() for page, _context, _browser in closed_resources)
+    assert all(not browser.is_connected() for _page, _context, browser in closed_resources)
 
 
 def test_responsive_pipeline_analyzes_local_overflow_fixture(capture, fixture_server):
@@ -497,6 +586,842 @@ def test_accessibility_scan_preserves_axe_results_and_specific_evidence(
         collection in serialized
         for collection in ("violations", "incomplete", "passes", "inapplicable")
     )
+
+
+def _run_keyboard_audit(fixture_server, path):
+    async def run():
+        async with async_playwright() as playwright:
+            browser = await playwright.chromium.launch()
+            try:
+                page = await browser.new_page(viewport={"width": 800, "height": 600})
+                await page.goto(f"{fixture_server}/{path}", wait_until="domcontentloaded")
+                return await audit_keyboard_focus(page)
+            finally:
+                await browser.close()
+
+    return asyncio.run(run())
+
+
+def _run_text_reflow_audit(fixture_server, path, *, width=1365, height=768):
+    async def run():
+        async with async_playwright() as playwright:
+            browser = await playwright.chromium.launch()
+            try:
+                page = await browser.new_page(viewport={"width": width, "height": height})
+                await page.goto(f"{fixture_server}/{path}", wait_until="domcontentloaded")
+                if path == "text-reflow-dynamic":
+                    await page.wait_for_timeout(300)
+                return await audit_text_reflow(
+                    page, baseline_width=width, baseline_height=height
+                )
+            finally:
+                await browser.close()
+
+    return asyncio.run(run())
+
+
+def test_text_reflow_usable_fixture_has_no_detected_clipping(fixture_server):
+    result = _run_text_reflow_audit(fixture_server, "text-reflow-usable")
+    text_scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "text_200_percent"
+    )
+
+    assert result.status == "partial"
+    assert text_scenario.status == "completed"
+    assert text_scenario.classification == "no_violation_detected"
+    assert text_scenario.criterion_ids == ["1.4.4"]
+    assert text_scenario.measurement.window_inner_width == 1365
+    assert text_scenario.baseline_measurement.window_inner_width == 1365
+
+
+def test_text_reflow_clipped_text_requires_availability_review(fixture_server):
+    result = _run_text_reflow_audit(fixture_server, "text-reflow-clipped")
+    scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "text_200_percent"
+    )
+
+    assert scenario.classification == "needs_review"
+    finding = next(
+        finding for finding in scenario.findings
+        if finding.selector == "#clipped"
+    )
+    assert finding.criterion_id == "1.4.4"
+    assert finding.level == "AA"
+    assert finding.classification == "needs_review"
+    assert finding.confidence == "medium"
+    assert finding.evidence["fontSize"] == "32px"
+    assert finding.evidence["scrollHeight"] > finding.evidence["clientHeight"]
+    assert finding.evidence["text_availability"] == "not_evaluated"
+    assert finding.baseline_evidence["fontSize"] == "16px"
+
+
+def test_text_reflow_reports_box_overlap_without_claiming_obscuration(fixture_server):
+    result = _run_text_reflow_audit(fixture_server, "text-reflow-overlap")
+    scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "text_200_percent"
+    )
+
+    assert scenario.classification == "needs_review"
+    overlap = next(
+        finding for finding in scenario.findings
+        if "overlap" in finding.observation
+    )
+    assert overlap.evidence["overlapHeight"] > 0
+    assert "requires review" in overlap.observation
+    assert all(finding.classification != "violation" for finding in scenario.findings)
+
+
+def test_text_reflow_flags_320px_overflow_for_review(fixture_server):
+    result = _run_text_reflow_audit(fixture_server, "text-reflow-wide")
+    scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "reflow_320_css_px"
+    )
+
+    assert scenario.status == "completed"
+    assert scenario.viewport_width == 320
+    assert scenario.measurement.window_inner_width == 320
+    assert scenario.baseline_measurement.window_inner_width == 1365
+    assert scenario.measurement.document_horizontal_overflow_px > 0
+    assert scenario.classification == "needs_review"
+    assert scenario.findings[0].criterion_id == "1.4.10"
+    assert all(finding.classification != "violation" for finding in scenario.findings)
+
+
+def test_text_reflow_does_not_fail_legitimate_table_scrolling(fixture_server):
+    result = _run_text_reflow_audit(fixture_server, "text-reflow-table")
+    scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "reflow_320_css_px"
+    )
+
+    assert scenario.classification == "needs_review"
+    assert scenario.findings
+    assert all(
+        finding.evidence["twoDimensionalRegion"] == "#data-table"
+        for finding in scenario.findings
+    )
+    assert any(
+        scenario.scenario_id == "reflow_256_css_px_height"
+        for scenario in result.scenarios
+    )
+
+
+def test_text_reflow_reports_unbreakable_text_overflow(fixture_server):
+    result = _run_text_reflow_audit(fixture_server, "text-reflow-unbreakable")
+    scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "reflow_320_css_px"
+    )
+
+    assert scenario.classification == "needs_review"
+    assert scenario.findings[0].criterion_id == "1.4.10"
+    evidence = scenario.findings[0].evidence
+    assert (
+        evidence["right"] > 320
+        or evidence["scrollWidth"] > evidence["clientWidth"]
+    )
+
+
+def test_text_reflow_uses_post_load_dynamic_content(fixture_server):
+    result = _run_text_reflow_audit(fixture_server, "text-reflow-dynamic")
+    baseline = result.scenarios[0]
+
+    assert baseline.status == "completed"
+    assert baseline.measurement.inspected_text_elements == 1
+    assert next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "browser_zoom_200_percent"
+    ).status == "unsupported"
+
+
+def test_text_reflow_ellipsis_disclosure_and_nested_sizes_need_review(fixture_server):
+    result = _run_text_reflow_audit(fixture_server, "text-reflow-review")
+    scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "text_200_percent"
+    )
+    findings = {finding.selector: finding for finding in scenario.findings}
+
+    assert findings["#ellipsis"].classification == "needs_review"
+    assert findings["#ellipsis"].evidence["text_availability"] == "not_evaluated"
+    assert findings["#disclosed"].classification == "needs_review"
+    assert findings["#disclosed"].evidence["text_availability"] == "not_evaluated"
+    assert findings["#nested"].evidence["fontSize"] == "45px"
+    assert all(finding.classification != "violation" for finding in findings.values())
+
+
+def test_text_reflow_disclosure_remains_operable_when_clipping_is_reported(
+    fixture_server,
+):
+    async def verify_disclosure():
+        async with async_playwright() as playwright:
+            browser = await playwright.chromium.launch()
+            try:
+                page = await browser.new_page(viewport={"width": 1365, "height": 768})
+                await page.goto(
+                    f"{fixture_server}/text-reflow-review",
+                    wait_until="domcontentloaded",
+                )
+                accessible_link_count = await page.get_by_role(
+                    "link",
+                    name="The full text remains available to assistive technology",
+                ).count()
+                result = await audit_text_reflow(
+                    page, baseline_width=1365, baseline_height=768
+                )
+                await page.locator("#full-disclosure summary").click()
+                disclosed_text = await page.locator("#full-content").inner_text()
+                return result, disclosed_text, accessible_link_count
+            finally:
+                await browser.close()
+
+    result, disclosed_text, accessible_link_count = asyncio.run(verify_disclosure())
+    scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "text_200_percent"
+    )
+
+    assert "complete disclosure text" in disclosed_text
+    assert accessible_link_count == 1
+    assert any(
+        finding.selector == "#disclosed"
+        and finding.classification == "needs_review"
+        for finding in scenario.findings
+    )
+
+
+def test_text_reflow_responsive_content_replacement_needs_review(fixture_server):
+    result = _run_text_reflow_audit(fixture_server, "text-reflow-responsive")
+    scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "reflow_320_css_px"
+    )
+
+    assert scenario.classification == "needs_review"
+    assert any(
+        finding.selector == "#desktop-copy"
+        and finding.evidence["visible_in_test"] is False
+        for finding in scenario.findings
+    )
+
+
+def test_text_reflow_marks_viewport_resize_unsupported_without_page_support():
+    class PageWithoutResize:
+        async def evaluate(self, _expression, _argument):
+            return {
+                "viewport": {"width": 800, "height": 600},
+                "document": {"scrollWidth": 800, "scrollHeight": 600},
+                "inspectedTextElements": 0,
+                "elements": [],
+                "overflowBoundaries": [],
+                "overlapPairs": [],
+            }
+
+    result = asyncio.run(
+        audit_text_reflow(
+            PageWithoutResize(), baseline_width=800, baseline_height=600
+        )
+    )
+    assert next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "reflow_320_css_px"
+    ).status == "unsupported"
+    assert next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "browser_zoom_200_percent"
+    ).status == "unsupported"
+
+
+def test_text_reflow_baseline_failure_is_explicit():
+    class BrokenPage:
+        async def evaluate(self, _expression, _argument):
+            raise RuntimeError("evaluation failed")
+
+    result = asyncio.run(
+        audit_text_reflow(BrokenPage(), baseline_width=800, baseline_height=600)
+    )
+    assert result.status == "unavailable"
+    assert result.scenarios[0].scenario_id == "baseline"
+    assert result.scenarios[0].status == "error"
+    assert result.scenarios[0].classification == "error"
+
+
+def test_text_reflow_restores_styles_and_viewport_after_scenarios(fixture_server):
+    async def run():
+        async with async_playwright() as playwright:
+            browser = await playwright.chromium.launch()
+            try:
+                page = await browser.new_page(viewport={"width": 1365, "height": 768})
+                await page.goto(
+                    f"{fixture_server}/text-reflow-table",
+                    wait_until="domcontentloaded",
+                )
+                original_style = await page.locator("td").first.evaluate(
+                    """(element) => ({
+                        value: element.style.getPropertyValue("font-size"),
+                        priority: element.style.getPropertyPriority("font-size")
+                    })"""
+                )
+                await page.locator("td").nth(1).evaluate(
+                    "(element) => element.style.setProperty('font-size', '19px', 'important')"
+                )
+                explicit_style = await page.locator("td").nth(1).evaluate(
+                    """(element) => ({
+                        value: element.style.getPropertyValue("font-size"),
+                        priority: element.style.getPropertyPriority("font-size")
+                    })"""
+                )
+                result = await audit_text_reflow(
+                    page, baseline_width=1365, baseline_height=768
+                )
+                restored_style = await page.locator("td").first.evaluate(
+                    """(element) => ({
+                        value: element.style.getPropertyValue("font-size"),
+                        priority: element.style.getPropertyPriority("font-size")
+                    })"""
+                )
+                restored_explicit_style = await page.locator("td").nth(1).evaluate(
+                    """(element) => ({
+                        value: element.style.getPropertyValue("font-size"),
+                        priority: element.style.getPropertyPriority("font-size")
+                    })"""
+                )
+                return (
+                    result,
+                    page.viewport_size,
+                    original_style,
+                    restored_style,
+                    explicit_style,
+                    restored_explicit_style,
+                )
+            finally:
+                await browser.close()
+
+    (
+        result,
+        viewport_size,
+        original_style,
+        restored_style,
+        explicit_style,
+        restored_explicit_style,
+    ) = asyncio.run(run())
+    height_scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "reflow_256_css_px_height"
+    )
+    assert viewport_size == {"width": 1365, "height": 768}
+    assert restored_style == original_style
+    assert restored_explicit_style == explicit_style
+    assert height_scenario.status == "completed"
+    assert height_scenario.viewport_width == 1365
+    assert height_scenario.measurement.viewport_height == 256
+
+
+def test_text_reflow_candidate_limit_prevents_clean_classification(
+    fixture_server, monkeypatch
+):
+    monkeypatch.setattr("app.analyzers.text_reflow.MAX_INSPECTED_ELEMENTS", 1)
+    result = _run_text_reflow_audit(fixture_server, "text-reflow-usable")
+    text_scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "text_200_percent"
+    )
+
+    assert text_scenario.status == "completed"
+    assert text_scenario.classification == "needs_review"
+    assert text_scenario.findings == []
+    assert any("capped at 1 candidates" in detail for detail in text_scenario.details)
+
+
+def test_text_reflow_reports_document_overflow_without_text_candidates():
+    class PageWithDocumentOverflow:
+        def __init__(self):
+            self.width = 390
+            self.height = 844
+
+        async def evaluate(self, _expression, argument):
+            overflow = self.width == 320 and not argument["enlargeText"]
+            return {
+                "viewport": {"width": self.width, "height": self.height},
+                "document": {
+                    "scrollWidth": self.width + (180 if overflow else 0),
+                    "scrollHeight": self.height,
+                },
+                "inspectedTextElements": 0,
+                "candidatesTruncated": False,
+                "elements": [],
+                "overlapPairs": [],
+                "overflowBoundaries": [],
+            }
+
+        async def set_viewport_size(self, viewport_size):
+            self.width = viewport_size["width"]
+            self.height = viewport_size["height"]
+
+    page = PageWithDocumentOverflow()
+    result = asyncio.run(
+        audit_text_reflow(page, baseline_width=390, baseline_height=844)
+    )
+    scenario = next(
+        scenario for scenario in result.scenarios
+        if scenario.scenario_id == "reflow_320_css_px"
+    )
+
+    assert scenario.classification == "needs_review"
+    assert scenario.findings[0].selector == "html"
+    assert scenario.findings[0].evidence["document_horizontal_overflow_px"] == 180
+    assert scenario.findings[0].classification == "needs_review"
+    assert page.width == 390
+    assert page.height == 844
+
+
+def test_keyboard_audit_records_visible_keyboard_focus(fixture_server):
+    result = _run_keyboard_audit(fixture_server, "keyboard-visible")
+    sequence_check = next(
+        check for check in result.checks if check.check_id == "sequential_navigation"
+    )
+    indicator_check = next(
+        check for check in result.checks if check.check_id == "focus_indicator"
+    )
+
+    assert result.status == "partial"
+    assert sequence_check.status == "needs_review"
+    assert indicator_check.status == "needs_review"
+    assert all(check.status != "pass" for check in result.checks)
+    assert result.tab_actions > 0
+    assert result.shift_tab_actions == 2
+    assert [finding.selector for finding in result.findings] == [
+        "#first-link",
+        "#second-button",
+        "#third-input",
+    ]
+    assert result.findings[0].accessible_name == "Skip to content"
+    assert result.findings[0].role == "link"
+    assert all(
+        finding.focus_indicator_detected is True for finding in result.findings
+    )
+    assert all(finding.focus_visible_pseudo_class is True for finding in result.findings)
+
+
+def test_keyboard_audit_marks_missing_focus_indicator_for_review(fixture_server):
+    result = _run_keyboard_audit(fixture_server, "keyboard-absent")
+    indicator = next(check for check in result.checks if check.check_id == "focus_indicator")
+
+    assert indicator.status == "needs_review"
+    assert result.findings[0].focus_indicator_detected is False
+    assert "other indicator techniques" in indicator.summary
+
+
+def test_keyboard_audit_reports_interactive_candidate_skipped_by_tab(fixture_server):
+    result = _run_keyboard_audit(fixture_server, "keyboard-skipped")
+    sequence = next(
+        check for check in result.checks if check.check_id == "sequential_navigation"
+    )
+
+    assert sequence.status == "needs_review"
+    assert "#skipped" in sequence.evidence[0]["unobserved_candidates"]
+
+
+def test_keyboard_audit_does_not_assume_candidate_count_proves_tab_order(
+    fixture_server,
+):
+    result = _run_keyboard_audit(fixture_server, "keyboard-edge-cases")
+    sequence = next(
+        check for check in result.checks if check.check_id == "sequential_navigation"
+    )
+    focus_order = next(
+        check for check in result.checks if check.check_id == "focus_order"
+    )
+
+    assert sequence.status == "needs_review"
+    assert focus_order.status == "needs_review"
+    assert all(check.status != "pass" for check in result.checks)
+    evidence = sequence.evidence[0]
+    assert evidence["candidate_list_truncated"] is False
+    assert evidence["shift_tab_sequence"]
+    assert any(
+        "positive tabindex" in item.lower() and "#positive-tabindex" in item
+        for item in result.candidate_limitations
+    )
+    assert any("radio group" in item for item in result.candidate_limitations)
+    assert any("shadow roots" in item for item in result.candidate_limitations)
+    assert "#dynamic" in result.late_candidates
+    assert "#dynamic" in result.unexpected_focus_targets
+    dynamic = next(item for item in result.findings if item.selector == "#dynamic")
+    assert dynamic.discovery_status == "outside_initial_snapshot"
+    assert any("#dynamic" in item for item in result.candidate_limitations)
+
+
+def test_keyboard_audit_reports_potential_focus_trap_for_review(fixture_server):
+    result = _run_keyboard_audit(fixture_server, "keyboard-trap")
+    sequence = next(
+        check for check in result.checks if check.check_id == "sequential_navigation"
+    )
+
+    assert sequence.status == "needs_review"
+    assert "or a trap" in sequence.summary
+    assert result.tab_actions <= 20
+    assert result.shift_tab_actions <= 2
+
+
+def test_keyboard_audit_reports_focus_obscuration_for_review(fixture_server):
+    result = _run_keyboard_audit(fixture_server, "keyboard-overlay")
+    obscuration = next(
+        check for check in result.checks if check.check_id == "focus_obscuration"
+    )
+
+    assert obscuration.status == "needs_review"
+    assert result.findings[0].obscured is True
+    assert result.findings[0].occluding_selector == "#cover"
+
+
+def test_keyboard_audit_skips_pages_without_interactive_controls(fixture_server):
+    result = _run_keyboard_audit(fixture_server, "keyboard-none")
+
+    assert result.status == "not_tested"
+    assert result.tab_actions == 0
+    assert all(check.status == "not_tested" for check in result.checks)
+
+
+def test_keyboard_audit_respects_page_safety_opt_out(fixture_server):
+    result = _run_keyboard_audit(fixture_server, "keyboard-unsafe")
+
+    assert result.status == "not_tested"
+    assert result.tab_actions == 0
+    assert result.checks[0].status == "not_tested"
+    assert "opted out" in result.checks[0].summary
+
+
+def test_keyboard_audit_reports_evaluation_errors_and_timeouts(monkeypatch):
+    from app.analyzers import keyboard_focus
+
+    class Keyboard:
+        async def press(self, _key):
+            return None
+
+    class BrokenPage:
+        keyboard = Keyboard()
+
+        async def evaluate(self, _expression, _argument=None):
+            raise RuntimeError("evaluation failed")
+
+    result = asyncio.run(audit_keyboard_focus(BrokenPage()))
+    assert result.status == "unavailable"
+    assert all(check.status == "error" for check in result.checks)
+
+    class SlowPage:
+        keyboard = Keyboard()
+
+        async def evaluate(self, _expression, _argument=None):
+            await asyncio.sleep(0.1)
+            return {}
+
+    monkeypatch.setattr(keyboard_focus, "ACTION_TIMEOUT_SECONDS", 0.01)
+    timed_out = asyncio.run(audit_keyboard_focus(SlowPage()))
+    assert timed_out.status == "unavailable"
+    assert all(check.status == "error" for check in timed_out.checks)
+    assert "timed out" in timed_out.details[0]
+
+
+def test_keyboard_audit_cancellation_removes_temporary_network_route(monkeypatch):
+    from app.analyzers import keyboard_focus
+
+    class Keyboard:
+        async def press(self, _key):
+            await asyncio.Event().wait()
+
+    class BlockingPage:
+        keyboard = Keyboard()
+
+        def __init__(self):
+            self.routes = []
+            self.unroutes = []
+
+        async def evaluate(self, _expression, _argument=None):
+            return {
+                "candidates": [
+                    {
+                        "selector": "#control",
+                        "expectedInSequentialNavigation": True,
+                        "baselineStyles": {},
+                    }
+                ],
+                "active": None,
+            }
+
+        async def route(self, pattern, handler):
+            self.routes.append((pattern, handler))
+
+        async def unroute(self, pattern, handler):
+            self.unroutes.append((pattern, handler))
+
+    async def run():
+        page = BlockingPage()
+        monkeypatch.setattr(keyboard_focus, "AUDIT_TIMEOUT_SECONDS", 0.02)
+        result = await audit_keyboard_focus(page)
+        return page, result
+
+    page, result = asyncio.run(run())
+    assert result.status == "unavailable"
+    assert len(page.routes) == 1
+    assert page.unroutes == page.routes
+
+
+def test_keyboard_audit_cancellation_during_evaluation_removes_network_route(
+    monkeypatch,
+):
+    from app.analyzers import keyboard_focus
+
+    class Keyboard:
+        async def press(self, _key):
+            return None
+
+    class BlockingEvaluationPage:
+        keyboard = Keyboard()
+
+        def __init__(self):
+            self.evaluations = 0
+            self.routes = []
+            self.unroutes = []
+
+        async def evaluate(self, _expression, _argument=None):
+            self.evaluations += 1
+            if self.evaluations == 1:
+                return {
+                    "candidates": [
+                        {
+                            "selector": "#control",
+                            "expectedInSequentialNavigation": True,
+                            "baselineStyles": {},
+                        }
+                    ],
+                    "active": None,
+                }
+            await asyncio.Event().wait()
+
+        async def route(self, pattern, handler):
+            self.routes.append((pattern, handler))
+
+        async def unroute(self, pattern, handler):
+            self.unroutes.append((pattern, handler))
+
+    page = BlockingEvaluationPage()
+    monkeypatch.setattr(keyboard_focus, "AUDIT_TIMEOUT_SECONDS", 0.02)
+    result = asyncio.run(audit_keyboard_focus(page))
+
+    assert result.status == "unavailable"
+    assert page.evaluations == 2
+    assert page.unroutes == page.routes
+
+
+def test_capture_closes_disposable_context_when_keyboard_audit_is_cancelled(
+    tmp_path, monkeypatch
+):
+    import app.capture.runner as runner
+
+    closed = []
+
+    class FakePage:
+        def __init__(self):
+            self.callback_started = asyncio.Event()
+
+        def on(self, *_args):
+            pass
+
+        async def route(self, *_args):
+            pass
+
+        async def close(self):
+            closed.append("page")
+
+    page = FakePage()
+
+    class FakeContext:
+        async def new_page(self):
+            return page
+
+        async def close(self):
+            closed.append("context")
+
+    class FakeBrowser:
+        async def new_context(self, **_kwargs):
+            return FakeContext()
+
+        async def close(self):
+            closed.append("browser")
+
+    class FakeChromium:
+        async def launch(self):
+            return FakeBrowser()
+
+    class FakePlaywright:
+        chromium = FakeChromium()
+
+    class FakeManager:
+        async def __aenter__(self):
+            return FakePlaywright()
+
+        async def __aexit__(self, *_args):
+            return False
+
+    monkeypatch.setattr(runner, "async_playwright", lambda: FakeManager())
+    service = BrowserCapture(
+        storage=LocalScreenshotStorage(tmp_path),
+        url_validator=LocalhostValidator(),
+    )
+
+    async def skip_navigation(_page, _url, _evidence):
+        return None
+
+    async def skip_collection(_page, _evidence):
+        return None
+
+    def mark_ready(evidence):
+        evidence.outcome = "completed"
+        evidence.readiness_status = "ready"
+
+    monkeypatch.setattr(service, "_navigate", skip_navigation)
+    monkeypatch.setattr(service, "_settle_and_collect", skip_collection)
+    monkeypatch.setattr(service, "_set_outcome", mark_ready)
+
+    async def callback(_page):
+        page.callback_started.set()
+        await asyncio.Event().wait()
+
+    async def run_capture():
+        task = asyncio.create_task(
+            service.capture(
+                "http://example.test/",
+                800,
+                600,
+                page_callback=callback,
+            )
+        )
+        await page.callback_started.wait()
+        task.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await task
+
+    asyncio.run(run_capture())
+    assert closed == ["page", "context", "browser"]
+
+
+def test_real_playwright_evaluation_cancellation_cleans_audit_route_and_context(
+    tmp_path, monkeypatch
+):
+    import app.capture.runner as runner
+
+    async def run_capture():
+        async with async_playwright() as playwright:
+            browser = await playwright.chromium.launch()
+
+            class FakeChromium:
+                async def launch(self):
+                    return browser
+
+            class FakePlaywright:
+                chromium = FakeChromium()
+
+            class FakeManager:
+                async def __aenter__(self):
+                    return FakePlaywright()
+
+                async def __aexit__(self, *_args):
+                    return False
+
+            monkeypatch.setattr(runner, "async_playwright", lambda: FakeManager())
+            original_close_resources = runner._close_resources
+            resources_at_close = []
+
+            async def close_resources(page, context, browser_resource):
+                resources_at_close.append((page, context, browser_resource))
+                return await original_close_resources(page, context, browser_resource)
+
+            monkeypatch.setattr(runner, "_close_resources", close_resources)
+            service = BrowserCapture(
+                storage=LocalScreenshotStorage(tmp_path),
+                url_validator=LocalhostValidator(),
+            )
+
+            async def prepare_page(page, _url, _evidence):
+                await page.set_content("<button id='control'>Control</button>")
+
+            async def skip_collection(_page, _evidence):
+                return None
+
+            def mark_ready(evidence):
+                evidence.outcome = "completed"
+                evidence.readiness_status = "ready"
+
+            monkeypatch.setattr(service, "_navigate", prepare_page)
+            monkeypatch.setattr(service, "_settle_and_collect", skip_collection)
+            monkeypatch.setattr(service, "_set_outcome", mark_ready)
+            evaluation_started = asyncio.Event()
+            registered_routes = []
+            removed_routes = []
+
+            async def callback(page):
+                original_evaluate = page.evaluate
+                original_route = page.route
+                original_unroute = page.unroute
+                evaluate_count = 0
+
+                async def block_second_evaluation(expression, argument=None):
+                    nonlocal evaluate_count
+                    evaluate_count += 1
+                    if evaluate_count == 2:
+                        evaluation_started.set()
+                        return await original_evaluate(
+                            "() => new Promise(() => {})"
+                        )
+                    return await original_evaluate(expression, argument)
+
+                async def track_route_removal(pattern, handler=None, *args, **kwargs):
+                    removed_routes.append((pattern, handler))
+                    return await original_unroute(
+                        pattern, handler, *args, **kwargs
+                    )
+
+                async def track_route_installation(
+                    pattern, handler, *args, **kwargs
+                ):
+                    registered_routes.append((pattern, handler))
+                    return await original_route(
+                        pattern, handler, *args, **kwargs
+                    )
+
+                page.evaluate = block_second_evaluation
+                page.route = track_route_installation
+                page.unroute = track_route_removal
+                await audit_keyboard_focus(page)
+
+            task = asyncio.create_task(
+                service.capture(
+                    "http://example.test/",
+                    800,
+                    600,
+                    page_callback=callback,
+                )
+            )
+            await evaluation_started.wait()
+            task.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await task
+
+            assert len(resources_at_close) == 1
+            page, context, closed_browser = resources_at_close[0]
+            assert page.is_closed()
+            assert all(open_page.is_closed() for open_page in context.pages)
+            assert closed_browser is browser
+            assert not browser.is_connected()
+            assert len(registered_routes) == 1
+            assert removed_routes == registered_routes
+
+    asyncio.run(run_capture())
 
 
 def test_element_overflow_diagnosis_uses_real_geometry_and_filters_candidates(

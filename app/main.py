@@ -30,6 +30,17 @@ from app.analyzers.functional_ux import (
     FunctionalUXStatus,
     MAX_LINK_AUDIT_DURATION_SECONDS,
 )
+from app.analyzers.keyboard_focus import (
+    AUDIT_TIMEOUT_SECONDS as KEYBOARD_AUDIT_TIMEOUT_SECONDS,
+    KeyboardAuditStatus,
+    KeyboardCheckStatus,
+)
+from app.analyzers.text_reflow import (
+    SCENARIO_TIMEOUT_SECONDS as TEXT_REFLOW_SCENARIO_TIMEOUT_SECONDS,
+    ScenarioClassification,
+    ScenarioStatus,
+    TextReflowAuditStatus,
+)
 from app.analyzers.accessibility import ACCESSIBILITY_SCAN_TIMEOUT_SECONDS
 from app.capture.responsive import (
     ElementDiagnosisStatus,
@@ -53,6 +64,8 @@ CAPTURE_TIMEOUT_SECONDS = (
         + SETTLING_PERIOD_MS
         + MAX_LINK_AUDIT_DURATION_SECONDS * 1_000
         + ACCESSIBILITY_SCAN_TIMEOUT_SECONDS * 1_000
+        + KEYBOARD_AUDIT_TIMEOUT_SECONDS * 1_000
+        + 8 * TEXT_REFLOW_SCENARIO_TIMEOUT_SECONDS * 1_000
     )
     / 1_000
     + 15
@@ -156,6 +169,89 @@ class AccessibilityScanSchema(BaseModel):
     details: list[str]
 
 
+class KeyboardFocusEvidenceSchema(BaseModel):
+    selector: str
+    tag_name: str
+    accessible_name: str | None
+    role: str | None
+    discovery_status: Literal["initial_candidate", "outside_initial_snapshot"]
+    sequence_index: int
+    focus_indicator_detected: bool | None
+    focus_visible_pseudo_class: bool | None
+    focus_indicator_evidence: dict[str, str]
+    obscured: bool | None
+    partially_obscured: bool
+    occluding_selector: str | None
+    details: list[str]
+
+
+class KeyboardCheckSchema(BaseModel):
+    check_id: str
+    criterion_ids: list[str]
+    status: KeyboardCheckStatus
+    summary: str
+    evidence: list[dict]
+
+
+class KeyboardFocusAuditSchema(BaseModel):
+    status: KeyboardAuditStatus
+    checks: list[KeyboardCheckSchema]
+    findings: list[KeyboardFocusEvidenceSchema]
+    details: list[str]
+    candidate_limitations: list[str]
+    late_candidates: list[str]
+    unexpected_focus_targets: list[str]
+    tab_actions: int
+    shift_tab_actions: int
+
+
+class TextReflowMeasurementSchema(BaseModel):
+    viewport_width: int
+    viewport_height: int
+    window_inner_width: int
+    window_inner_height: int
+    document_scroll_width: int
+    document_scroll_height: int
+    document_horizontal_overflow_px: int
+    overflow_boundaries: list[dict]
+    inspected_text_elements: int
+
+
+class TextReflowFindingSchema(BaseModel):
+    criterion_id: str
+    level: Literal["AA"]
+    classification: Literal["violation", "needs_review"]
+    selector: str
+    tag_name: str
+    observation: str
+    evidence: dict
+    baseline_evidence: dict | None
+    confidence: Literal["high", "medium", "low"]
+    remediation: str
+
+
+class TextReflowScenarioSchema(BaseModel):
+    scenario_id: str
+    status: ScenarioStatus
+    classification: ScenarioClassification
+    condition: str
+    method: str
+    criterion_ids: list[str]
+    viewport_width: int | None
+    viewport_height: int | None
+    measurement: TextReflowMeasurementSchema | None
+    baseline_measurement: TextReflowMeasurementSchema | None
+    findings: list[TextReflowFindingSchema]
+    screenshot_ref: str | None
+    details: list[str]
+
+
+class TextReflowAuditSchema(BaseModel):
+    status: TextReflowAuditStatus
+    scenarios: list[TextReflowScenarioSchema]
+    details: list[str]
+
+
 class NormalizedFindingsSchema(BaseModel):
     status: FindingNormalizationStatus
     findings: list[NormalizedHorizontalOverflowFinding]
@@ -236,6 +332,8 @@ class ResponsiveViewportResponse(BaseModel):
     element_overflow_diagnosis: ElementOverflowDiagnosisSchema
     functional_ux_audit: FunctionalUXAuditSchema
     accessibility_scan: AccessibilityScanSchema
+    keyboard_focus_audit: KeyboardFocusAuditSchema
+    text_reflow_audit: TextReflowAuditSchema
     finding_normalization: NormalizedFindingsSchema
     screenshot_ref: str | None
     details: list[str]
@@ -386,6 +484,35 @@ class ResponsiveCaptureResponse(BaseModel):
                             for rule in result.accessibility_scan.inapplicable
                         ],
                         details=result.accessibility_scan.details,
+                    ),
+                    keyboard_focus_audit=KeyboardFocusAuditSchema(
+                        status=result.keyboard_focus_audit.status,
+                        checks=[
+                            KeyboardCheckSchema(**asdict(check))
+                            for check in result.keyboard_focus_audit.checks
+                        ],
+                        findings=[
+                            KeyboardFocusEvidenceSchema(**asdict(finding))
+                            for finding in result.keyboard_focus_audit.findings
+                        ],
+                        details=result.keyboard_focus_audit.details,
+                        candidate_limitations=(
+                            result.keyboard_focus_audit.candidate_limitations
+                        ),
+                        late_candidates=result.keyboard_focus_audit.late_candidates,
+                        unexpected_focus_targets=(
+                            result.keyboard_focus_audit.unexpected_focus_targets
+                        ),
+                        tab_actions=result.keyboard_focus_audit.tab_actions,
+                        shift_tab_actions=result.keyboard_focus_audit.shift_tab_actions,
+                    ),
+                    text_reflow_audit=TextReflowAuditSchema(
+                        status=result.text_reflow_audit.status,
+                        scenarios=[
+                            TextReflowScenarioSchema(**asdict(scenario))
+                            for scenario in result.text_reflow_audit.scenarios
+                        ],
+                        details=result.text_reflow_audit.details,
                     ),
                     finding_normalization=NormalizedFindingsSchema(
                         status=result.finding_normalization.status,

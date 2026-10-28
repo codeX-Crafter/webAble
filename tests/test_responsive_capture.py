@@ -17,11 +17,28 @@ from app.capture.url_safety import UnsafeURL
 
 
 class FakePage:
+    def __init__(self):
+        self.width = 1365
+        self.height = 768
+
     async def add_script_tag(self, *, content):
         assert content
 
     async def evaluate(self, _expression, argument):
         if isinstance(argument, dict):
+            if "maxElements" in argument:
+                return {
+                    "viewport": {"width": self.width, "height": self.height},
+                    "document": {
+                        "scrollWidth": self.width,
+                        "scrollHeight": self.height,
+                    },
+                    "inspectedTextElements": 0,
+                    "candidatesTruncated": False,
+                    "elements": [],
+                    "overflowBoundaries": [],
+                    "overlapPairs": [],
+                }
             return {
                 "links": [],
                 "images": [],
@@ -37,6 +54,10 @@ class FakePage:
                 "inapplicable": [],
             }
         return []
+
+    async def set_viewport_size(self, viewport_size):
+        self.width = viewport_size["width"]
+        self.height = viewport_size["height"]
 
 
 async def finish_diagnosis(page_callback):
@@ -303,6 +324,65 @@ def test_accessibility_scan_failure_preserves_existing_capture_results(monkeypat
     assert all(result.accessibility_scan.details for result in results)
 
 
+def test_keyboard_audit_failure_preserves_capture_and_other_audits(monkeypatch):
+    async def fail_keyboard_audit(_page):
+        raise RuntimeError("keyboard audit failed")
+
+    monkeypatch.setattr(responsive, "audit_keyboard_focus", fail_keyboard_audit)
+
+    async def capture(_url, width, height, *, page_callback=None):
+        await finish_diagnosis(page_callback)
+        return make_evidence(
+            width,
+            height,
+            scroll_width=width + 10,
+            visible_width=width,
+            screenshot_ref=f"screenshots/{width}.png",
+        )
+
+    results = asyncio.run(
+        responsive.capture_responsive_viewports("https://example.test", capture)
+    )
+
+    assert all(result.capture_outcome == "completed" for result in results)
+    assert all(result.screenshot_ref for result in results)
+    assert all(result.horizontal_overflow.overflow_px == 10 for result in results)
+    assert all(result.functional_ux_audit.status == "available" for result in results)
+    assert all(result.accessibility_scan.status == "available" for result in results)
+    assert all(result.keyboard_focus_audit.status == "unavailable" for result in results)
+    assert all(result.keyboard_focus_audit.details for result in results)
+
+
+def test_text_reflow_failure_preserves_existing_capture_and_audits(monkeypatch):
+    async def fail_text_reflow(*_args, **_kwargs):
+        raise RuntimeError("reflow evaluator failed")
+
+    monkeypatch.setattr(responsive, "audit_text_reflow", fail_text_reflow)
+
+    async def capture(_url, width, height, *, page_callback=None):
+        await finish_diagnosis(page_callback)
+        return make_evidence(
+            width,
+            height,
+            scroll_width=width + 10,
+            visible_width=width,
+            screenshot_ref=f"screenshots/{width}.png",
+        )
+
+    results = asyncio.run(
+        responsive.capture_responsive_viewports("https://example.test", capture)
+    )
+
+    assert all(result.capture_outcome == "completed" for result in results)
+    assert all(result.screenshot_ref for result in results)
+    assert all(result.horizontal_overflow.overflow_px == 10 for result in results)
+    assert all(result.functional_ux_audit.status == "available" for result in results)
+    assert all(result.accessibility_scan.status == "available" for result in results)
+    assert all(result.keyboard_focus_audit.status == "unavailable" for result in results)
+    assert all(result.text_reflow_audit.status == "unavailable" for result in results)
+    assert all(result.text_reflow_audit.details for result in results)
+
+
 def test_results_keep_viewport_screenshot_and_outcome_associated():
     async def capture(_url, width, height, *, page_callback=None):
         await finish_diagnosis(page_callback)
@@ -331,6 +411,18 @@ def test_results_keep_viewport_screenshot_and_outcome_associated():
         result.element_overflow_diagnosis.status == "available"
         for result in results
     )
+    for result in results:
+        baseline = next(
+            scenario
+            for scenario in result.text_reflow_audit.scenarios
+            if scenario.scenario_id == "baseline"
+        )
+        assert baseline.screenshot_ref == result.screenshot_ref
+        assert all(
+            scenario.screenshot_ref is None
+            for scenario in result.text_reflow_audit.scenarios
+            if scenario.scenario_id != "baseline"
+        )
 
 
 def test_element_findings_are_associated_with_correct_viewport():

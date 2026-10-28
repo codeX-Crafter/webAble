@@ -21,6 +21,14 @@ from app.analyzers.functional_ux import (
     FunctionalUXAuditResult,
     audit_functional_ux,
 )
+from app.analyzers.keyboard_focus import (
+    KeyboardFocusAuditResult,
+    audit_keyboard_focus,
+)
+from app.analyzers.text_reflow import (
+    TextReflowAuditResult,
+    audit_text_reflow,
+)
 from app.analyzers.horizontal_overflow import (
     HorizontalOverflowResult,
     analyze_horizontal_overflow,
@@ -96,6 +104,18 @@ class ViewportCaptureResult:
             details=["Accessibility scan was not attempted."],
         )
     )
+    keyboard_focus_audit: KeyboardFocusAuditResult = field(
+        default_factory=lambda: KeyboardFocusAuditResult(
+            status="not_tested",
+            details=["Keyboard/focus audit was not attempted."],
+        )
+    )
+    text_reflow_audit: TextReflowAuditResult = field(
+        default_factory=lambda: TextReflowAuditResult(
+            status="not_tested",
+            details=["Text scaling and reflow audit was not attempted."],
+        )
+    )
 
 
 VIEWPORTS = (
@@ -152,9 +172,17 @@ async def capture_responsive_viewports(
             status="not_attempted",
             details=["Accessibility scan was not attempted because capture was incomplete."],
         )
+        keyboard_focus = KeyboardFocusAuditResult(
+            status="not_tested",
+            details=["Keyboard/focus audit was not attempted because capture was incomplete."],
+        )
+        text_reflow = TextReflowAuditResult(
+            status="not_tested",
+            details=["Text scaling and reflow audit was not attempted because capture was incomplete."],
+        )
 
         async def diagnose_live_page(page: PageEvaluator) -> None:
-            nonlocal diagnosis, functional_audit, accessibility
+            nonlocal diagnosis, functional_audit, accessibility, keyboard_focus, text_reflow
             try:
                 findings = await diagnoser(page, viewport.width)
             except Exception as error:
@@ -201,6 +229,28 @@ async def capture_responsive_viewports(
                     status="unavailable",
                     details=[
                         f"The accessibility engine could not complete ({type(error).__name__})."
+                    ],
+                )
+            try:
+                keyboard_focus = await audit_keyboard_focus(page)
+            except Exception as error:
+                keyboard_focus = KeyboardFocusAuditResult(
+                    status="unavailable",
+                    details=[
+                        f"Keyboard/focus audit failed ({type(error).__name__})."
+                    ],
+                )
+            try:
+                text_reflow = await audit_text_reflow(
+                    page,
+                    baseline_width=viewport.width,
+                    baseline_height=viewport.height,
+                )
+            except Exception as error:
+                text_reflow = TextReflowAuditResult(
+                    status="unavailable",
+                    details=[
+                        f"Text scaling and reflow audit failed ({type(error).__name__})."
                     ],
                 )
 
@@ -281,6 +331,16 @@ async def capture_responsive_viewports(
             evidence.outcome == "completed"
             and evidence.readiness_status == "ready"
         )
+        if capture_is_complete and evidence.screenshot_ref:
+            text_reflow = replace(
+                text_reflow,
+                scenarios=[
+                    replace(scenario, screenshot_ref=evidence.screenshot_ref)
+                    if scenario.scenario_id == "baseline"
+                    else scenario
+                    for scenario in text_reflow.scenarios
+                ],
+            )
         if not capture_is_complete:
             functional_audit = FunctionalUXAuditResult(
                 status="not_attempted",
@@ -293,6 +353,16 @@ async def capture_responsive_viewports(
                 details=[
                     "Accessibility scan was not attempted because capture was incomplete."
                 ],
+            )
+            keyboard_focus = KeyboardFocusAuditResult(
+                status="not_tested",
+                details=[
+                    "Keyboard/focus audit was not attempted because capture was incomplete."
+                ],
+            )
+            text_reflow = TextReflowAuditResult(
+                status="not_tested",
+                details=["Text scaling and reflow audit was not attempted because capture was incomplete."],
             )
         if not capture_is_complete:
             analysis_status: OverflowAnalysisStatus = "capture_incomplete"
@@ -354,6 +424,8 @@ async def capture_responsive_viewports(
                 details=details,
                 functional_ux_audit=functional_audit,
                 accessibility_scan=accessibility,
+                keyboard_focus_audit=keyboard_focus,
+                text_reflow_audit=text_reflow,
             )
         )
 

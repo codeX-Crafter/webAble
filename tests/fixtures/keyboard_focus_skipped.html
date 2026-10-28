@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Keyboard candidate skipped fixture</title></head>
+<body>
+  <button id="first" type="button">First</button>
+  <button id="skipped" type="button" tabindex="0">Skipped by test page</button>
+  <button id="last" type="button">Last</button>
+  <script>
+    document.addEventListener("keydown", event => {
+      if (event.key === "Tab" && event.target.id === "first") {
+        event.preventDefault();
+        document.getElementById("last").focus();
+      }
+    }, true);
+  </script>
+</body>
+</html>

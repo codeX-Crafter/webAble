@@ -83,11 +83,113 @@ An incomplete axe result is for human review, never a confirmed violation.
 Execution failures and missing local axe assets are explicitly `unavailable`;
 they do not discard capture, screenshot, overflow, layout, or functional UX
 results. The full WCAG 2.2 A/AA criterion inventory and limitations are in
-[accessibility-coverage-v1.md](./accessibility-coverage-v1.md).
+[WCAG 2.2 coverage inventory](./wcag-22-coverage-inventory.md).
+
+Each successful viewport also includes a separate `keyboard_focus_audit`. It
+samples visible interactive candidates with at most 20 `Tab` and 2
+`Shift+Tab` key presses, recording bounded selectors, role/name, focus state,
+computed-style indicator evidence, and hit-test evidence for possible
+obscuration. It never presses Enter or Space or clicks controls. The audit
+temporarily blocks network requests during key interaction and runs in the
+disposable isolated capture context, which is closed after all audits. Pages can
+opt out with `data-webable-keyboard-audit="unsafe"` on the root element.
+
+Each keyboard check has its own `pass`, `fail`, `needs_review`, `not_tested`,
+or `error` status and remains separate from axe results. The current heuristic
+does not emit `pass` or `fail`: observed sequences and possible style/occlusion
+signals are classified `needs_review`, while absent candidates are
+`not_tested`. This avoids treating a bounded observation as proof of
+conformance or failure. A suspected trap, missing focus style, skipped
+candidate, or possible overlay is sent for review. A sampled Tab order does
+not establish correct semantic focus order, keyboard operation of every widget,
+indicator contrast/size, or complete non-obscuration. The hit test samples only
+a few points; computed-style comparison cannot discover every focus indicator
+technique. Focus/blur handlers can have other page-defined effects, so network
+interception and blocking service workers are not a guarantee that arbitrary
+script is side-effect-free.
+
+The candidate list is a heuristic snapshot, not the browser's authoritative
+sequential focus order. Per-scan evidence identifies detected positive
+`tabindex` elements, treats each named radio group as one expected sequential
+tab stop, reports open shadow-root hosts and frames, identifies candidates
+appearing after the initial snapshot, and marks focused targets absent from the
+initial snapshot. These are explicit limitations, not proof that a candidate
+was unreachable. Closed shadow roots, inaccessible frame
+contents, and custom widgets may remain undiscovered. Observed elements are
+not treated as complete merely because their count matches the snapshot. Tab
+and Shift+Tab traversal stops on a repeat, the action limit, or an observed
+end; the repeat may represent normal wrapping rather than a trap. The audit's
+outer and per-action timeouts return explicit error or review states;
+cancellation unwinds the temporary route handler and the capture runner closes
+the page, context, and browser in its `finally` cleanup.
+
+The inventory distinguishes existing axe mappings from this WebAble keyboard
+probe. axe-core 4.14.0 has enabled, selected rules tagged to 2.1.1, but none for
+2.1.2, 2.4.3, 2.4.7, or 2.4.11. The probe adds bounded partial evidence for
+those criteria without replacing contextual evaluation. WCAG 2.2 criterion
+2.4.13 Focus Appearance is Level AAA (not AA) and remains out of scope; this
+audit does not measure its perimeter-area or contrast requirements.
+
+Each successful viewport also includes `text_reflow_audit` with separately
+identified baseline, 200% text-enlargement, 320 CSS-pixel reflow, and browser
+zoom scenarios. The text scenario temporarily doubles each discovered visible
+text-bearing element's computed font size, measures clipping and new text
+overlaps, and restores inline font styles within the same page evaluation.
+All eligible candidates' original computed sizes are read before any style is
+changed. Nested and inherited sizes are then set as explicit doubled pixel
+values, so this deterministic method does not reproduce relative-unit
+cascading or every browser's text-only zoom behavior. The 320 CSS-pixel
+scenario resizes the existing page using CSS viewport dimensions and restores
+the original viewport in a `finally` path. A 256 CSS-pixel height probe at the
+captured width runs only when a table or ARIA table/grid is detected.
+
+Playwright Chromium in this configuration does not provide a reliable
+verified control for actual browser zoom, so 200% browser zoom is explicitly
+`unsupported`; no CSS transform, device-scale-factor, or screenshot-size proxy
+is used. Measured clipping, ellipsis, overlap, and horizontal overflow are
+reported as `needs_review`: geometry alone does not establish that text is
+unavailable, that overlap obscures information, or that a two-dimensional
+content exception applies. Ellipsis and clipping measurements explicitly leave
+complete-text availability unevaluated. Document-level horizontal overflow is
+also surfaced for review when no text-element finding accounts for it.
+Truncated candidate discovery prevents a `no_violation_detected` result.
+Confidence labels are qualitative descriptions of the strength of the
+measurement evidence, not probabilities or calibrated scores.
+
+The bounded scan does not inspect generated pseudo-element content, canvas
+text, or text embedded in images; it does not evaluate every dynamic or
+interactive state, and it samples at most 300 text-bearing elements. A
+responsive replacement or missing baseline element is reported for review,
+not treated as proof of lost content. Only the original capture screenshot is
+referenced; scenario screenshots are not saved because the text override is
+applied and restored inside one synchronous page evaluation, while the
+existing capture callback has no scenario-screenshot storage hook. Splitting
+that operation to screenshot a modified page would require a separate
+cleanup-safe lifecycle. `no_violation_detected` means only that these bounded
+checks did not detect a problem; it is not a conformance claim.
+
+The checked-in text-reflow fixtures have these observed behaviors and test
+expectations:
+
+| Fixture | HTML/CSS behavior and observable result | Expected classification | Criterion | Deterministic |
+|---|---|---|---|---|
+| [text_reflow_usable.html](../tests/fixtures/text_reflow_usable.html) | A wrapping paragraph grows without clipped text after the font-size override. | `no_violation_detected` for the 200% probe. | 1.4.4 | Yes |
+| [text_reflow_clipped.html](../tests/fixtures/text_reflow_clipped.html) | A fixed-height paragraph has `overflow-y: hidden`; its measured scroll height exceeds its client height after enlargement. The fixture has no disclosure, but the analyzer does not establish that text is unavailable. | `needs_review`, never a confirmed violation. | 1.4.4 | Yes |
+| [text_reflow_review.html](../tests/fixtures/text_reflow_review.html) | An ellipsized link has a full accessible name, a clipped preview has a working `<details>` disclosure, and a nested `1.25em` span is clipped after its computed size is doubled. | `needs_review` for each geometry signal; text availability is not inferred. | 1.4.4 | Yes |
+| [text_reflow_overlap.html](../tests/fixtures/text_reflow_overlap.html) | Absolute-positioned link boxes gain geometric overlap from the enlarged font and bottom padding, while their short glyph strings remain visually separated. | `needs_review`; rectangle intersection alone does not establish obscuration. | 1.4.4 | Yes |
+| [text_reflow_dynamic.html](../tests/fixtures/text_reflow_dynamic.html) | A paragraph is inserted 100 ms after navigation; the test waits 300 ms before the baseline measurement. The sampled paragraph is present. | `no_violation_detected` for the measured 200% and 320 px states; later dynamic states are not evaluated. | 1.4.4, 1.4.10 | Yes, with the test's explicit wait |
+| [text_reflow_wide.html](../tests/fixtures/text_reflow_wide.html) | A 700 px main region and its paragraph extend beyond the 320 CSS px viewport, producing document and element overflow. | `needs_review`; page overflow is not itself a violation. | 1.4.10 | Yes |
+| [text_reflow_unbreakable.html](../tests/fixtures/text_reflow_unbreakable.html) | A `white-space: nowrap` string extends past the 320 CSS px viewport. | `needs_review`. | 1.4.10 | Yes |
+| [text_reflow_table.html](../tests/fixtures/text_reflow_table.html) | A 700 px data table sits in an `overflow-x: auto` wrapper; table cells remain in a potentially two-dimensional region. The test also measures a 256 CSS px height at the captured width. | `needs_review`, not an assumed exception or violation; the height probe completes. | 1.4.10 | Yes |
+| [text_reflow_responsive.html](../tests/fixtures/text_reflow_responsive.html) | A media query hides desktop-specific instructions and displays different mobile-specific instructions at 320 CSS px. | `needs_review` for the baseline text that disappears; equivalent meaning is not determined. | 1.4.10 | Yes |
+
+These fixtures prove only their stated browser observations and bounded
+classifications. They do not prove criterion conformance or that a potential
+two-dimensional exception is applicable.
 
 Automated checks cannot decide whether alternative text is meaningful, whether
 content order or instructions make sense, whether all keyboard flows work, or
-whether media and dynamic interactions are accessible. Hidden states, zoom/reflow,
+whether media and dynamic interactions are accessible. Actual browser zoom,
 live media, assistive-technology output, and cross-page criteria are not evaluated
 by this scan. A clean or empty violations collection is not evidence of WCAG
 conformance. This use of axe-core is locally hosted and makes no service request

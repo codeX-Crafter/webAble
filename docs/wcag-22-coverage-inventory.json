@@ -1,0 +1,4029 @@
+{
+  "inventory_version": "2.0",
+  "wcag_version": "2.2",
+  "axe_core_version": "4.14.0",
+  "source_inventory": {
+    "path": "tests/fixtures/wcag22_criteria_source.json",
+    "url": "https://www.w3.org/TR/WCAG22/",
+    "current_url": "https://www.w3.org/TR/WCAG/",
+    "retrieved": "2026-10-28",
+    "description": "Independent checked-in transcription of in-scope criterion identifiers, titles, levels, principles, and anchors from the W3C Recommendation."
+  },
+  "scanner_configuration": {
+    "run_only_tags": [
+      "wcag2a",
+      "wcag2aa",
+      "wcag21a",
+      "wcag21aa",
+      "wcag22aa"
+    ],
+    "effective_mapping_definition": "A criterion mapping is effective only when an axe rule contains the exact wcag{criterion-id-without-dots} tag, is enabled in axe-core package metadata, and also contains at least one configured scanner runOnly version/level tag."
+  },
+  "summary": {
+    "criterion_count": 55,
+    "mapped_criteria_with_enabled_selected_rules": 20,
+    "classification_counts": {
+      "automated": 0,
+      "partial": 25,
+      "manual_evaluation_required": 26,
+      "not_implemented": 4
+    }
+  },
+  "scope_exclusions": [
+    {
+      "id": "2.4.13",
+      "title": "Focus Appearance",
+      "level": "AAA",
+      "reason": "Level AAA; excluded from this A/AA inventory.",
+      "url": "https://www.w3.org/TR/WCAG22/#focus-appearance",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html"
+    },
+    {
+      "id": "4.1.1",
+      "title": "Parsing",
+      "level": "Removed",
+      "reason": "WCAG 2.2 obsolete criterion; not applicable to this inventory.",
+      "url": "https://www.w3.org/TR/WCAG22/#parsing"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "1.1.1",
+      "title": "Non-text Content",
+      "level": "A",
+      "principle": "Perceivable",
+      "intent": "Provide text alternatives for non-text content, except where an exception applies.",
+      "anchor": "non-text-content",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#non-text-content",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag111",
+      "axe_rules": [
+        {
+          "rule_id": "aria-meter-name",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag111",
+            "EN-301-549",
+            "EN-9.1.1.1",
+            "RGAAv4",
+            "RGAA-11.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure every ARIA meter node has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-meter-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-progressbar-name",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag111",
+            "EN-301-549",
+            "EN-9.1.1.1",
+            "RGAAv4",
+            "RGAA-11.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure every ARIA progressbar node has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-progressbar-name?application=axeAPI"
+        },
+        {
+          "rule_id": "image-alt",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag111",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT7.a",
+            "TT7.b",
+            "EN-301-549",
+            "EN-9.1.1.1",
+            "ACT",
+            "RGAAv4",
+            "RGAA-1.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <img> elements have alternative text or a role of none or presentation",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "input-image-alt",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag111",
+            "wcag412",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT7.a",
+            "EN-301-549",
+            "EN-9.1.1.1",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-1.1.3"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <input type=\"image\"> elements have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/input-image-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "object-alt",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag111",
+            "section508",
+            "section508.22.a",
+            "EN-301-549",
+            "EN-9.1.1.1",
+            "RGAAv4",
+            "RGAA-1.1.6"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <object> elements have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/object-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "role-img-alt",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag111",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT7.a",
+            "EN-301-549",
+            "EN-9.1.1.1",
+            "ACT",
+            "RGAAv4",
+            "RGAA-1.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure [role=\"img\"] and [role=\"image\"] elements have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/role-img-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "svg-img-alt",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag111",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT7.a",
+            "EN-301-549",
+            "EN-9.1.1.1",
+            "ACT",
+            "RGAAv4",
+            "RGAA-1.1.5"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <svg> elements with an img, image, graphics-document or graphics-symbol role have accessible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/svg-img-alt?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "aria-meter-name",
+          "description": "Ensure every ARIA meter node has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-meter-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-progressbar-name",
+          "description": "Ensure every ARIA progressbar node has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-progressbar-name?application=axeAPI"
+        },
+        {
+          "rule_id": "image-alt",
+          "description": "Ensure <img> elements have alternative text or a role of none or presentation",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "input-image-alt",
+          "description": "Ensure <input type=\"image\"> elements have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/input-image-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "object-alt",
+          "description": "Ensure <object> elements have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/object-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "role-img-alt",
+          "description": "Ensure [role=\"img\"] and [role=\"image\"] elements have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/role-img-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "svg-img-alt",
+          "description": "Ensure <svg> elements with an img, image, graphics-document or graphics-symbol role have accessible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/svg-img-alt?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#non-text-content",
+        "https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-meter-name?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-progressbar-name?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/input-image-alt?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/object-alt?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/role-img-alt?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/svg-img-alt?application=axeAPI"
+      ],
+      "relevant_tests": [
+        "tests/test_capture.py::test_accessibility_scan_preserves_axe_results_and_specific_evidence"
+      ],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.2.1",
+      "title": "Audio-only and Video-only (Prerecorded)",
+      "level": "A",
+      "principle": "Perceivable",
+      "intent": "Provide an equivalent alternative for prerecorded audio-only and video-only content.",
+      "anchor": "audio-only-and-video-only-prerecorded",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#audio-only-and-video-only-prerecorded",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/audio-only-and-video-only-prerecorded.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag121",
+      "axe_rules": [
+        {
+          "rule_id": "audio-caption",
+          "tags": [
+            "cat.time-and-media",
+            "wcag2a",
+            "wcag121",
+            "EN-301-549",
+            "EN-9.1.2.1",
+            "section508",
+            "section508.22.a",
+            "deprecated"
+          ],
+          "package_enabled": false,
+          "selected_by_scan": true,
+          "effective_enabled": false,
+          "description": "Ensure <audio> elements have captions",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/audio-caption?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#audio-only-and-video-only-prerecorded",
+        "https://www.w3.org/WAI/WCAG22/Understanding/audio-only-and-video-only-prerecorded.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.2.2",
+      "title": "Captions (Prerecorded)",
+      "level": "A",
+      "principle": "Perceivable",
+      "intent": "Provide captions for prerecorded synchronized audio and video content.",
+      "anchor": "captions-prerecorded",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#captions-prerecorded",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/captions-prerecorded.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag122",
+      "axe_rules": [
+        {
+          "rule_id": "video-caption",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag122",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT17.a",
+            "EN-301-549",
+            "EN-9.1.2.2",
+            "RGAAv4",
+            "RGAA-4.3.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <video> elements have captions",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/video-caption?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "video-caption",
+          "description": "Ensure <video> elements have captions",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/video-caption?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#captions-prerecorded",
+        "https://www.w3.org/WAI/WCAG22/Understanding/captions-prerecorded.html",
+        "https://dequeuniversity.com/rules/axe/4.14/video-caption?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.2.3",
+      "title": "Audio Description or Media Alternative (Prerecorded)",
+      "level": "A",
+      "principle": "Perceivable",
+      "intent": "Provide audio description or a complete text alternative for prerecorded synchronized media.",
+      "anchor": "audio-description-or-media-alternative-prerecorded",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#audio-description-or-media-alternative-prerecorded",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/audio-description-or-media-alternative-prerecorded.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag123",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#audio-description-or-media-alternative-prerecorded",
+        "https://www.w3.org/WAI/WCAG22/Understanding/audio-description-or-media-alternative-prerecorded.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.2.4",
+      "title": "Captions (Live)",
+      "level": "AA",
+      "principle": "Perceivable",
+      "intent": "Provide captions for live synchronized audio and video content.",
+      "anchor": "captions-live",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#captions-live",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/captions-live.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag124",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#captions-live",
+        "https://www.w3.org/WAI/WCAG22/Understanding/captions-live.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.2.5",
+      "title": "Audio Description (Prerecorded)",
+      "level": "AA",
+      "principle": "Perceivable",
+      "intent": "Provide audio description for prerecorded video content.",
+      "anchor": "audio-description-prerecorded",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#audio-description-prerecorded",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/audio-description-prerecorded.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag125",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#audio-description-prerecorded",
+        "https://www.w3.org/WAI/WCAG22/Understanding/audio-description-prerecorded.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.3.1",
+      "title": "Info and Relationships",
+      "level": "A",
+      "principle": "Perceivable",
+      "intent": "Make information, structure, and relationships programmatically determinable or available in text.",
+      "anchor": "info-and-relationships",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#info-and-relationships",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag131",
+      "axe_rules": [
+        {
+          "rule_id": "aria-hidden-body",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag131",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-10.8.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure aria-hidden=\"true\" is not present on the document body.",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-hidden-body?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-required-children",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure elements with an ARIA role that require child roles contain them",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-required-children?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-required-parent",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure elements with an ARIA role that require parent roles are contained by them",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-required-parent?application=axeAPI"
+        },
+        {
+          "rule_id": "definition-list",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <dl> elements are structured correctly",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/definition-list?application=axeAPI"
+        },
+        {
+          "rule_id": "dlitem",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <dt> and <dd> elements are contained by a <dl>",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/dlitem?application=axeAPI"
+        },
+        {
+          "rule_id": "list",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure that lists are structured correctly",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/list?application=axeAPI"
+        },
+        {
+          "rule_id": "listitem",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <li> elements are used semantically",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/listitem?application=axeAPI"
+        },
+        {
+          "rule_id": "p-as-heading",
+          "tags": [
+            "cat.semantics",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.1.3",
+            "experimental"
+          ],
+          "package_enabled": false,
+          "selected_by_scan": true,
+          "effective_enabled": false,
+          "description": "Ensure bold, italic text and font-size is not used to style <p> elements as a heading",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/p-as-heading?application=axeAPI"
+        },
+        {
+          "rule_id": "table-fake-caption",
+          "tags": [
+            "cat.tables",
+            "experimental",
+            "wcag2a",
+            "wcag131",
+            "section508",
+            "section508.22.g",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-5.4.1"
+          ],
+          "package_enabled": false,
+          "selected_by_scan": true,
+          "effective_enabled": false,
+          "description": "Ensure that tables with a caption use the <caption> element.",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/table-fake-caption?application=axeAPI"
+        },
+        {
+          "rule_id": "td-has-header",
+          "tags": [
+            "cat.tables",
+            "experimental",
+            "wcag2a",
+            "wcag131",
+            "section508",
+            "section508.22.g",
+            "TTv5",
+            "TT14.b",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-5.7.4"
+          ],
+          "package_enabled": false,
+          "selected_by_scan": true,
+          "effective_enabled": false,
+          "description": "Ensure that each non-empty data cell in a <table> larger than 3 by 3  has one or more table headers",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/td-has-header?application=axeAPI"
+        },
+        {
+          "rule_id": "td-headers-attr",
+          "tags": [
+            "cat.tables",
+            "wcag2a",
+            "wcag131",
+            "section508",
+            "section508.22.g",
+            "TTv5",
+            "TT14.b",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-5.7.4"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure that each cell in a table that uses the headers attribute refers only to other <th> elements in that table",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/td-headers-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "th-has-data-cells",
+          "tags": [
+            "cat.tables",
+            "wcag2a",
+            "wcag131",
+            "section508",
+            "section508.22.g",
+            "TTv5",
+            "TT14.b",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-5.7.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure that <th> elements and elements with role=columnheader/rowheader have data cells they describe",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/th-has-data-cells?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "aria-hidden-body",
+          "description": "Ensure aria-hidden=\"true\" is not present on the document body.",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-hidden-body?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-required-children",
+          "description": "Ensure elements with an ARIA role that require child roles contain them",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-required-children?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-required-parent",
+          "description": "Ensure elements with an ARIA role that require parent roles are contained by them",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-required-parent?application=axeAPI"
+        },
+        {
+          "rule_id": "definition-list",
+          "description": "Ensure <dl> elements are structured correctly",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/definition-list?application=axeAPI"
+        },
+        {
+          "rule_id": "dlitem",
+          "description": "Ensure <dt> and <dd> elements are contained by a <dl>",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/dlitem?application=axeAPI"
+        },
+        {
+          "rule_id": "list",
+          "description": "Ensure that lists are structured correctly",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/list?application=axeAPI"
+        },
+        {
+          "rule_id": "listitem",
+          "description": "Ensure <li> elements are used semantically",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/listitem?application=axeAPI"
+        },
+        {
+          "rule_id": "td-headers-attr",
+          "description": "Ensure that each cell in a table that uses the headers attribute refers only to other <th> elements in that table",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/td-headers-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "th-has-data-cells",
+          "description": "Ensure that <th> elements and elements with role=columnheader/rowheader have data cells they describe",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/th-has-data-cells?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#info-and-relationships",
+        "https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-hidden-body?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-required-children?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-required-parent?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/definition-list?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/dlitem?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/list?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/listitem?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/td-headers-attr?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/th-has-data-cells?application=axeAPI"
+      ],
+      "relevant_tests": [
+        "tests/test_capture.py::test_accessibility_scan_preserves_axe_results_and_specific_evidence"
+      ],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.3.2",
+      "title": "Meaningful Sequence",
+      "level": "A",
+      "principle": "Perceivable",
+      "intent": "Preserve a meaningful reading or interaction sequence when presentation order matters.",
+      "anchor": "meaningful-sequence",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#meaningful-sequence",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag132",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#meaningful-sequence",
+        "https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.3.3",
+      "title": "Sensory Characteristics",
+      "level": "A",
+      "principle": "Perceivable",
+      "intent": "Do not rely solely on sensory characteristics to identify instructions or content.",
+      "anchor": "sensory-characteristics",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#sensory-characteristics",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/sensory-characteristics.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag133",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#sensory-characteristics",
+        "https://www.w3.org/WAI/WCAG22/Understanding/sensory-characteristics.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.3.4",
+      "title": "Orientation",
+      "level": "AA",
+      "principle": "Perceivable",
+      "intent": "Support content and functionality in both portrait and landscape orientation unless an exception applies.",
+      "anchor": "orientation",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#orientation",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/orientation.html",
+      "coverage_classification": "not_implemented",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag134",
+      "axe_rules": [
+        {
+          "rule_id": "css-orientation-lock",
+          "tags": [
+            "cat.structure",
+            "wcag134",
+            "wcag21aa",
+            "EN-301-549",
+            "EN-9.1.3.4",
+            "RGAAv4",
+            "RGAA-13.9.1",
+            "experimental"
+          ],
+          "package_enabled": false,
+          "selected_by_scan": true,
+          "effective_enabled": false,
+          "description": "Ensure content is not locked to any specific display orientation, and the content is operable in all display orientations",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/css-orientation-lock?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#orientation",
+        "https://www.w3.org/WAI/WCAG22/Understanding/orientation.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Design and validate a criterion-specific check or interaction scenario before adding automated coverage; do not infer a pass from the absence of an axe mapping.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.3.5",
+      "title": "Identify Input Purpose",
+      "level": "AA",
+      "principle": "Perceivable",
+      "intent": "Programmatically identify the purpose of specified user-input fields.",
+      "anchor": "identify-input-purpose",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#identify-input-purpose",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/identify-input-purpose.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag135",
+      "axe_rules": [
+        {
+          "rule_id": "autocomplete-valid",
+          "tags": [
+            "cat.forms",
+            "wcag21aa",
+            "wcag135",
+            "EN-301-549",
+            "EN-9.1.3.5",
+            "ACT",
+            "RGAAv4",
+            "RGAA-11.13.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure the autocomplete attribute is correct and suitable for the form field",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/autocomplete-valid?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "autocomplete-valid",
+          "description": "Ensure the autocomplete attribute is correct and suitable for the form field",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/autocomplete-valid?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#identify-input-purpose",
+        "https://www.w3.org/WAI/WCAG22/Understanding/identify-input-purpose.html",
+        "https://dequeuniversity.com/rules/axe/4.14/autocomplete-valid?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.4.1",
+      "title": "Use of Color",
+      "level": "A",
+      "principle": "Perceivable",
+      "intent": "Do not use color as the only visual means of conveying information, action, or distinction.",
+      "anchor": "use-of-color",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#use-of-color",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag141",
+      "axe_rules": [
+        {
+          "rule_id": "link-in-text-block",
+          "tags": [
+            "cat.color",
+            "wcag2a",
+            "wcag141",
+            "TTv5",
+            "TT13.a",
+            "EN-301-549",
+            "EN-9.1.4.1",
+            "RGAAv4",
+            "RGAA-10.6.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure links are distinguished from surrounding text in a way that does not rely on color",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-in-text-block?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "link-in-text-block",
+          "description": "Ensure links are distinguished from surrounding text in a way that does not rely on color",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-in-text-block?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#use-of-color",
+        "https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html",
+        "https://dequeuniversity.com/rules/axe/4.14/link-in-text-block?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.4.2",
+      "title": "Audio Control",
+      "level": "A",
+      "principle": "Perceivable",
+      "intent": "Provide a mechanism to pause or stop certain automatically playing audio or control its volume.",
+      "anchor": "audio-control",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#audio-control",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/audio-control.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag142",
+      "axe_rules": [
+        {
+          "rule_id": "no-autoplay-audio",
+          "tags": [
+            "cat.time-and-media",
+            "wcag2a",
+            "wcag142",
+            "TTv5",
+            "TT2.a",
+            "EN-301-549",
+            "EN-9.1.4.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-4.10.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <video> or <audio> elements do not autoplay audio for more than 3 seconds without a control mechanism to stop or mute the audio",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/no-autoplay-audio?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "no-autoplay-audio",
+          "description": "Ensure <video> or <audio> elements do not autoplay audio for more than 3 seconds without a control mechanism to stop or mute the audio",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/no-autoplay-audio?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#audio-control",
+        "https://www.w3.org/WAI/WCAG22/Understanding/audio-control.html",
+        "https://dequeuniversity.com/rules/axe/4.14/no-autoplay-audio?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.4.3",
+      "title": "Contrast (Minimum)",
+      "level": "AA",
+      "principle": "Perceivable",
+      "intent": "Meet minimum text and image-of-text contrast ratios, subject to defined exceptions.",
+      "anchor": "contrast-minimum",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#contrast-minimum",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag143",
+      "axe_rules": [
+        {
+          "rule_id": "color-contrast",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "color-contrast",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#contrast-minimum",
+        "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+        "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI"
+      ],
+      "relevant_tests": [
+        "tests/test_capture.py::test_accessibility_scan_preserves_axe_results_and_specific_evidence"
+      ],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.4.4",
+      "title": "Resize Text",
+      "level": "AA",
+      "principle": "Perceivable",
+      "intent": "Allow text to be resized up to 200 percent without loss of content or functionality.",
+      "anchor": "resize-text",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#resize-text",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": true,
+      "text_reflow_checks": [
+        "A bounded per-element computed-font-size override probes 200% text for possible clipping, ellipsis, and overlap; text availability is not determined, so these observations require review."
+      ],
+      "axe_criterion_tag": "wcag144",
+      "axe_rules": [
+        {
+          "rule_id": "meta-viewport",
+          "tags": [
+            "cat.sensory-and-visual-cues",
+            "wcag2aa",
+            "wcag144",
+            "EN-301-549",
+            "EN-9.1.4.4",
+            "ACT",
+            "RGAAv4",
+            "RGAA-10.4.2"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <meta name=\"viewport\"> does not disable text scaling and zooming",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/meta-viewport?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "meta-viewport",
+          "description": "Ensure <meta name=\"viewport\"> does not disable text scaling and zooming",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/meta-viewport?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#resize-text",
+        "https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html",
+        "https://dequeuniversity.com/rules/axe/4.14/meta-viewport?application=axeAPI"
+      ],
+      "relevant_tests": [
+        "tests/test_capture.py::test_text_reflow_clipped_text_requires_availability_review",
+        "tests/test_capture.py::test_text_reflow_ellipsis_disclosure_and_nested_sizes_need_review",
+        "tests/test_capture.py::test_text_reflow_disclosure_remains_operable_when_clipping_is_reported",
+        "tests/test_capture.py::test_text_reflow_reports_box_overlap_without_claiming_obscuration",
+        "tests/test_capture.py::test_text_reflow_usable_fixture_has_no_detected_clipping",
+        "tests/test_capture.py::test_text_reflow_candidate_limit_prevents_clean_classification"
+      ],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.4.5",
+      "title": "Images of Text",
+      "level": "AA",
+      "principle": "Perceivable",
+      "intent": "Use text rather than images of text except where an exception applies.",
+      "anchor": "images-of-text",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#images-of-text",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/images-of-text.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag145",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#images-of-text",
+        "https://www.w3.org/WAI/WCAG22/Understanding/images-of-text.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.4.10",
+      "title": "Reflow",
+      "level": "AA",
+      "principle": "Perceivable",
+      "intent": "Present content without two-dimensional scrolling at specified narrow viewport or zoom conditions, except where essential.",
+      "anchor": "reflow",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#reflow",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/reflow.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": true,
+      "text_reflow_checks": [
+        "The existing page is measured at 320 CSS pixels wide; text and document-level overflow are evidence for review, not violations by themselves.",
+        "A 256 CSS-pixel height probe runs when a table or ARIA table/grid is detected; this heuristic does not determine whether an exception applies, and browser zoom is unsupported."
+      ],
+      "axe_criterion_tag": "wcag1410",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag; the listed WebAble probes are separate, bounded evidence and do not establish criterion conformance.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#reflow",
+        "https://www.w3.org/WAI/WCAG22/Understanding/reflow.html"
+      ],
+      "relevant_tests": [
+        "tests/test_capture.py::test_text_reflow_flags_320px_overflow_for_review",
+        "tests/test_capture.py::test_text_reflow_does_not_fail_legitimate_table_scrolling",
+        "tests/test_capture.py::test_text_reflow_reports_unbreakable_text_overflow",
+        "tests/test_capture.py::test_text_reflow_responsive_content_replacement_needs_review"
+      ],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.4.11",
+      "title": "Non-text Contrast",
+      "level": "AA",
+      "principle": "Perceivable",
+      "intent": "Provide required contrast for visual information needed to identify interface components and graphical objects.",
+      "anchor": "non-text-contrast",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#non-text-contrast",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html",
+      "coverage_classification": "not_implemented",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag1411",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#non-text-contrast",
+        "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Design and validate a criterion-specific check or interaction scenario before adding automated coverage; do not infer a pass from the absence of an axe mapping.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.4.12",
+      "title": "Text Spacing",
+      "level": "AA",
+      "principle": "Perceivable",
+      "intent": "Preserve content and functionality when users override specified text-spacing properties.",
+      "anchor": "text-spacing",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#text-spacing",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag1412",
+      "axe_rules": [
+        {
+          "rule_id": "avoid-inline-spacing",
+          "tags": [
+            "cat.structure",
+            "wcag21aa",
+            "wcag1412",
+            "EN-301-549",
+            "EN-9.1.4.12",
+            "ACT"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure that text spacing set through style attributes can be adjusted with custom stylesheets",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/avoid-inline-spacing?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "avoid-inline-spacing",
+          "description": "Ensure that text spacing set through style attributes can be adjusted with custom stylesheets",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/avoid-inline-spacing?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#text-spacing",
+        "https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html",
+        "https://dequeuniversity.com/rules/axe/4.14/avoid-inline-spacing?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "1.4.13",
+      "title": "Content on Hover or Focus",
+      "level": "AA",
+      "principle": "Perceivable",
+      "intent": "Make additional content shown on hover or focus dismissible, hoverable, and persistent as required.",
+      "anchor": "content-on-hover-or-focus",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#content-on-hover-or-focus",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html",
+      "coverage_classification": "not_implemented",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag1413",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#content-on-hover-or-focus",
+        "https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Design and validate a criterion-specific check or interaction scenario before adding automated coverage; do not infer a pass from the absence of an axe mapping.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.1.1",
+      "title": "Keyboard",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Make all functionality operable through a keyboard interface, except where the function depends on path-based input.",
+      "anchor": "keyboard",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#keyboard",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": true,
+      "keyboard_focus_checks": [
+        "Sequential Tab/Shift+Tab focus progression is sampled without activating controls."
+      ],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag211",
+      "axe_rules": [
+        {
+          "rule_id": "frame-focusable-content",
+          "tags": [
+            "cat.keyboard",
+            "wcag2a",
+            "wcag211",
+            "TTv5",
+            "TT4.a",
+            "EN-301-549",
+            "EN-9.2.1.1",
+            "RGAAv4",
+            "RGAA-7.3.2"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <frame> and <iframe> elements with focusable content do not have tabindex=-1",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/frame-focusable-content?application=axeAPI"
+        },
+        {
+          "rule_id": "scrollable-region-focusable",
+          "tags": [
+            "cat.keyboard",
+            "wcag2a",
+            "wcag211",
+            "wcag213",
+            "TTv5",
+            "TT4.a",
+            "EN-301-549",
+            "EN-9.2.1.1",
+            "EN-9.2.1.3",
+            "RGAAv4",
+            "RGAA-7.3.2"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/scrollable-region-focusable?application=axeAPI"
+        },
+        {
+          "rule_id": "server-side-image-map",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag211",
+            "section508",
+            "section508.22.f",
+            "TTv5",
+            "TT4.a",
+            "EN-301-549",
+            "EN-9.2.1.1",
+            "RGAAv4",
+            "RGAA-1.1.4"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure that server-side image maps are not used",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/server-side-image-map?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "frame-focusable-content",
+          "description": "Ensure <frame> and <iframe> elements with focusable content do not have tabindex=-1",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/frame-focusable-content?application=axeAPI"
+        },
+        {
+          "rule_id": "scrollable-region-focusable",
+          "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/scrollable-region-focusable?application=axeAPI"
+        },
+        {
+          "rule_id": "server-side-image-map",
+          "description": "Ensure that server-side image maps are not used",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/server-side-image-map?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": true,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#keyboard",
+        "https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html",
+        "https://dequeuniversity.com/rules/axe/4.14/frame-focusable-content?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/scrollable-region-focusable?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/server-side-image-map?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.1.2",
+      "title": "No Keyboard Trap",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Allow keyboard focus to move away from every component using only the keyboard.",
+      "anchor": "no-keyboard-trap",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#no-keyboard-trap",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/no-keyboard-trap.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": true,
+      "keyboard_focus_checks": [
+        "A bounded Tab sequence looks for focus that stops advancing; suspected traps require review."
+      ],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag212",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag; the listed WebAble probes are separate, bounded evidence and do not establish criterion conformance.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": true,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#no-keyboard-trap",
+        "https://www.w3.org/WAI/WCAG22/Understanding/no-keyboard-trap.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.1.4",
+      "title": "Character Key Shortcuts",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Provide a way to turn off, remap, or limit single-character shortcuts in applicable contexts.",
+      "anchor": "character-key-shortcuts",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#character-key-shortcuts",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag214",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": true,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#character-key-shortcuts",
+        "https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.2.1",
+      "title": "Timing Adjustable",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Allow users to turn off, adjust, or extend time limits, subject to exceptions.",
+      "anchor": "timing-adjustable",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#timing-adjustable",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag221",
+      "axe_rules": [
+        {
+          "rule_id": "meta-refresh",
+          "tags": [
+            "cat.time-and-media",
+            "wcag2a",
+            "wcag221",
+            "TTv5",
+            "TT8.a",
+            "EN-301-549",
+            "EN-9.2.2.1",
+            "RGAAv4",
+            "RGAA-13.1.2"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <meta http-equiv=\"refresh\"> is not used for delayed refresh",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/meta-refresh?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "meta-refresh",
+          "description": "Ensure <meta http-equiv=\"refresh\"> is not used for delayed refresh",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/meta-refresh?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#timing-adjustable",
+        "https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html",
+        "https://dequeuniversity.com/rules/axe/4.14/meta-refresh?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.2.2",
+      "title": "Pause, Stop, Hide",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Provide controls for certain moving, blinking, scrolling, or auto-updating content.",
+      "anchor": "pause-stop-hide",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#pause-stop-hide",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag222",
+      "axe_rules": [
+        {
+          "rule_id": "blink",
+          "tags": [
+            "cat.time-and-media",
+            "wcag2a",
+            "wcag222",
+            "section508",
+            "section508.22.j",
+            "TTv5",
+            "TT2.b",
+            "EN-301-549",
+            "EN-9.2.2.2",
+            "RGAAv4",
+            "RGAA-13.8.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <blink> elements are not used",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/blink?application=axeAPI"
+        },
+        {
+          "rule_id": "marquee",
+          "tags": [
+            "cat.parsing",
+            "wcag2a",
+            "wcag222",
+            "TTv5",
+            "TT2.b",
+            "EN-301-549",
+            "EN-9.2.2.2",
+            "RGAAv4",
+            "RGAA-13.8.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <marquee> elements are not used",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/marquee?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "blink",
+          "description": "Ensure <blink> elements are not used",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/blink?application=axeAPI"
+        },
+        {
+          "rule_id": "marquee",
+          "description": "Ensure <marquee> elements are not used",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/marquee?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#pause-stop-hide",
+        "https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html",
+        "https://dequeuniversity.com/rules/axe/4.14/blink?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/marquee?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.3.1",
+      "title": "Three Flashes or Below Threshold",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Ensure content does not flash more than three times per second unless below defined thresholds.",
+      "anchor": "three-flashes-or-below-threshold",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#three-flashes-or-below-threshold",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag231",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#three-flashes-or-below-threshold",
+        "https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.4.1",
+      "title": "Bypass Blocks",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Provide a way to bypass blocks of content repeated across multiple pages.",
+      "anchor": "bypass-blocks",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#bypass-blocks",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag241",
+      "axe_rules": [
+        {
+          "rule_id": "bypass",
+          "tags": [
+            "cat.keyboard",
+            "wcag2a",
+            "wcag241",
+            "section508",
+            "section508.22.o",
+            "TTv5",
+            "TT9.a",
+            "EN-301-549",
+            "EN-9.2.4.1",
+            "RGAAv4",
+            "RGAA-12.7.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure each page has at least one mechanism for a user to bypass navigation and jump straight to the content",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/bypass?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "bypass",
+          "description": "Ensure each page has at least one mechanism for a user to bypass navigation and jump straight to the content",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/bypass?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#bypass-blocks",
+        "https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html",
+        "https://dequeuniversity.com/rules/axe/4.14/bypass?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.4.2",
+      "title": "Page Titled",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Give each web page a title that describes its topic or purpose.",
+      "anchor": "page-titled",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#page-titled",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/page-titled.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag242",
+      "axe_rules": [
+        {
+          "rule_id": "document-title",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag242",
+            "TTv5",
+            "TT12.a",
+            "EN-301-549",
+            "EN-9.2.4.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-8.5.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure each HTML document contains a non-empty <title> element",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/document-title?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "document-title",
+          "description": "Ensure each HTML document contains a non-empty <title> element",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/document-title?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#page-titled",
+        "https://www.w3.org/WAI/WCAG22/Understanding/page-titled.html",
+        "https://dequeuniversity.com/rules/axe/4.14/document-title?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.4.3",
+      "title": "Focus Order",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Ensure sequential focus order preserves meaning and operability.",
+      "anchor": "focus-order",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#focus-order",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": true,
+      "keyboard_focus_checks": [
+        "The observed Tab sequence is recorded; whether its order preserves meaning requires human review."
+      ],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag243",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag; the listed WebAble probes are separate, bounded evidence and do not establish criterion conformance.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": true,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#focus-order",
+        "https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.4.4",
+      "title": "Link Purpose (In Context)",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Make the purpose of each link determinable from its text or programmatically determined context, with exceptions.",
+      "anchor": "link-purpose-in-context",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#link-purpose-in-context",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag244",
+      "axe_rules": [
+        {
+          "rule_id": "area-alt",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag244",
+            "wcag412",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT6.a",
+            "EN-301-549",
+            "EN-9.2.4.4",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-1.1.2"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <area> elements of image maps have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/area-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "link-name",
+          "tags": [
+            "cat.name-role-value",
+            "wcag2a",
+            "wcag244",
+            "wcag412",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT6.a",
+            "EN-301-549",
+            "EN-9.2.4.4",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-6.2.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure links have discernible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "area-alt",
+          "description": "Ensure <area> elements of image maps have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/area-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "link-name",
+          "description": "Ensure links have discernible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#link-purpose-in-context",
+        "https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html",
+        "https://dequeuniversity.com/rules/axe/4.14/area-alt?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.4.5",
+      "title": "Multiple Ways",
+      "level": "AA",
+      "principle": "Operable",
+      "intent": "Provide more than one way to locate a page within a set of pages, subject to exceptions.",
+      "anchor": "multiple-ways",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#multiple-ways",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/multiple-ways.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag245",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#multiple-ways",
+        "https://www.w3.org/WAI/WCAG22/Understanding/multiple-ways.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.4.6",
+      "title": "Headings and Labels",
+      "level": "AA",
+      "principle": "Operable",
+      "intent": "Use headings and labels that describe topic or purpose.",
+      "anchor": "headings-and-labels",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#headings-and-labels",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/headings-and-labels.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag246",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#headings-and-labels",
+        "https://www.w3.org/WAI/WCAG22/Understanding/headings-and-labels.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.4.7",
+      "title": "Focus Visible",
+      "level": "AA",
+      "principle": "Operable",
+      "intent": "Make the keyboard focus indicator visible.",
+      "anchor": "focus-visible",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#focus-visible",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": true,
+      "keyboard_focus_checks": [
+        "Keyboard focus state is compared with a limited set of computed CSS indicator properties."
+      ],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag247",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag; the listed WebAble probes are separate, bounded evidence and do not establish criterion conformance.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": true,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#focus-visible",
+        "https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.4.11",
+      "title": "Focus Not Obscured (Minimum)",
+      "level": "AA",
+      "principle": "Operable",
+      "intent": "Ensure a focused component is not entirely hidden by author-created content.",
+      "anchor": "focus-not-obscured-minimum",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#focus-not-obscured-minimum",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": true,
+      "keyboard_focus_checks": [
+        "Hit-testing samples focused-element points for possible complete occlusion."
+      ],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag2411",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag; the listed WebAble probes are separate, bounded evidence and do not establish criterion conformance.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": true,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#focus-not-obscured-minimum",
+        "https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.5.1",
+      "title": "Pointer Gestures",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Provide a single-pointer alternative for multipoint or path-based gestures, except where essential.",
+      "anchor": "pointer-gestures",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#pointer-gestures",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/pointer-gestures.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag251",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": true,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#pointer-gestures",
+        "https://www.w3.org/WAI/WCAG22/Understanding/pointer-gestures.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.5.2",
+      "title": "Pointer Cancellation",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Support at least one specified safeguard against accidental pointer activation.",
+      "anchor": "pointer-cancellation",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#pointer-cancellation",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/pointer-cancellation.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag252",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": true,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#pointer-cancellation",
+        "https://www.w3.org/WAI/WCAG22/Understanding/pointer-cancellation.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.5.3",
+      "title": "Label in Name",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Include visible text labels in the accessible names of applicable controls.",
+      "anchor": "label-in-name",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#label-in-name",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag253",
+      "axe_rules": [
+        {
+          "rule_id": "label-content-name-mismatch",
+          "tags": [
+            "cat.semantics",
+            "wcag21a",
+            "wcag253",
+            "EN-301-549",
+            "EN-9.2.5.3",
+            "RGAAv4",
+            "RGAA-6.1.5"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "label-content-name-mismatch",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#label-in-name",
+        "https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html",
+        "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.5.4",
+      "title": "Motion Actuation",
+      "level": "A",
+      "principle": "Operable",
+      "intent": "Provide an alternative to functionality triggered by device motion or user gestures, with exceptions.",
+      "anchor": "motion-actuation",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#motion-actuation",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/motion-actuation.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag254",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": true,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#motion-actuation",
+        "https://www.w3.org/WAI/WCAG22/Understanding/motion-actuation.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.5.7",
+      "title": "Dragging Movements",
+      "level": "AA",
+      "principle": "Operable",
+      "intent": "Provide a single-pointer alternative for functionality that uses dragging, unless dragging is essential.",
+      "anchor": "dragging-movements",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#dragging-movements",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag257",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": true,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#dragging-movements",
+        "https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "2.5.8",
+      "title": "Target Size (Minimum)",
+      "level": "AA",
+      "principle": "Operable",
+      "intent": "Ensure pointer targets meet minimum size or spacing requirements, subject to exceptions.",
+      "anchor": "target-size-minimum",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#target-size-minimum",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html",
+      "coverage_classification": "not_implemented",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag258",
+      "axe_rules": [
+        {
+          "rule_id": "target-size",
+          "tags": [
+            "cat.sensory-and-visual-cues",
+            "wcag22aa",
+            "wcag258",
+            "EN-301-549v4",
+            "EN-9.2.5.8"
+          ],
+          "package_enabled": false,
+          "selected_by_scan": true,
+          "effective_enabled": false,
+          "description": "Ensure touch targets have sufficient size and space",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/target-size?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#target-size-minimum",
+        "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Design and validate a criterion-specific check or interaction scenario before adding automated coverage; do not infer a pass from the absence of an axe mapping.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.1.1",
+      "title": "Language of Page",
+      "level": "A",
+      "principle": "Understandable",
+      "intent": "Programmatically determine the default human language of each page.",
+      "anchor": "language-of-page",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#language-of-page",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/language-of-page.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag311",
+      "axe_rules": [
+        {
+          "rule_id": "html-has-lang",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT",
+            "RGAAv4",
+            "RGAA-8.3.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure every HTML document has a lang attribute",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/html-has-lang?application=axeAPI"
+        },
+        {
+          "rule_id": "html-lang-valid",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT",
+            "RGAAv4",
+            "RGAA-8.4.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure the lang attribute of the <html> element has a valid value",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/html-lang-valid?application=axeAPI"
+        },
+        {
+          "rule_id": "html-xml-lang-mismatch",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT",
+            "RGAAv4",
+            "RGAA-8.3.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure that HTML elements with both valid lang and xml:lang attributes agree on the base language of the page",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/html-xml-lang-mismatch?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "html-has-lang",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/html-has-lang?application=axeAPI"
+        },
+        {
+          "rule_id": "html-lang-valid",
+          "description": "Ensure the lang attribute of the <html> element has a valid value",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/html-lang-valid?application=axeAPI"
+        },
+        {
+          "rule_id": "html-xml-lang-mismatch",
+          "description": "Ensure that HTML elements with both valid lang and xml:lang attributes agree on the base language of the page",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/html-xml-lang-mismatch?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#language-of-page",
+        "https://www.w3.org/WAI/WCAG22/Understanding/language-of-page.html",
+        "https://dequeuniversity.com/rules/axe/4.14/html-has-lang?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/html-lang-valid?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/html-xml-lang-mismatch?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.1.2",
+      "title": "Language of Parts",
+      "level": "AA",
+      "principle": "Understandable",
+      "intent": "Programmatically identify changes in the language of passages or phrases, with exceptions.",
+      "anchor": "language-of-parts",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#language-of-parts",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/language-of-parts.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag312",
+      "axe_rules": [
+        {
+          "rule_id": "valid-lang",
+          "tags": [
+            "cat.language",
+            "wcag2aa",
+            "wcag312",
+            "TTv5",
+            "TT11.b",
+            "EN-301-549",
+            "EN-9.3.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-8.8.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure lang attributes have valid values",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/valid-lang?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "valid-lang",
+          "description": "Ensure lang attributes have valid values",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/valid-lang?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#language-of-parts",
+        "https://www.w3.org/WAI/WCAG22/Understanding/language-of-parts.html",
+        "https://dequeuniversity.com/rules/axe/4.14/valid-lang?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.2.1",
+      "title": "On Focus",
+      "level": "A",
+      "principle": "Understandable",
+      "intent": "Avoid a change of context solely because a component receives focus.",
+      "anchor": "on-focus",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#on-focus",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/on-focus.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag321",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": true,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#on-focus",
+        "https://www.w3.org/WAI/WCAG22/Understanding/on-focus.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.2.2",
+      "title": "On Input",
+      "level": "A",
+      "principle": "Understandable",
+      "intent": "Avoid unexpected changes of context when changing a user-interface control setting, unless users were advised.",
+      "anchor": "on-input",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#on-input",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/on-input.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag322",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#on-input",
+        "https://www.w3.org/WAI/WCAG22/Understanding/on-input.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.2.3",
+      "title": "Consistent Navigation",
+      "level": "AA",
+      "principle": "Understandable",
+      "intent": "Keep repeated navigation mechanisms in a consistent relative order across pages.",
+      "anchor": "consistent-navigation",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#consistent-navigation",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/consistent-navigation.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag323",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#consistent-navigation",
+        "https://www.w3.org/WAI/WCAG22/Understanding/consistent-navigation.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.2.4",
+      "title": "Consistent Identification",
+      "level": "AA",
+      "principle": "Understandable",
+      "intent": "Identify components with the same functionality consistently across pages.",
+      "anchor": "consistent-identification",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#consistent-identification",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/consistent-identification.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag324",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#consistent-identification",
+        "https://www.w3.org/WAI/WCAG22/Understanding/consistent-identification.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.2.6",
+      "title": "Consistent Help",
+      "level": "AA",
+      "principle": "Understandable",
+      "intent": "Keep specified help mechanisms in a consistent relative order across pages.",
+      "anchor": "consistent-help",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#consistent-help",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/consistent-help.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag326",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#consistent-help",
+        "https://www.w3.org/WAI/WCAG22/Understanding/consistent-help.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.3.1",
+      "title": "Error Identification",
+      "level": "A",
+      "principle": "Understandable",
+      "intent": "Identify input errors and describe them to users in text.",
+      "anchor": "error-identification",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#error-identification",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag331",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#error-identification",
+        "https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.3.2",
+      "title": "Labels or Instructions",
+      "level": "A",
+      "principle": "Understandable",
+      "intent": "Provide labels or instructions when content requires user input.",
+      "anchor": "labels-or-instructions",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#labels-or-instructions",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag332",
+      "axe_rules": [
+        {
+          "rule_id": "form-field-multiple-labels",
+          "tags": [
+            "cat.forms",
+            "wcag2a",
+            "wcag332",
+            "TTv5",
+            "TT5.c",
+            "EN-301-549",
+            "EN-9.3.3.2",
+            "RGAAv4",
+            "RGAA-11.2.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure form field does not have multiple label elements",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/form-field-multiple-labels?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "form-field-multiple-labels",
+          "description": "Ensure form field does not have multiple label elements",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/form-field-multiple-labels?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#labels-or-instructions",
+        "https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html",
+        "https://dequeuniversity.com/rules/axe/4.14/form-field-multiple-labels?application=axeAPI"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.3.3",
+      "title": "Error Suggestion",
+      "level": "AA",
+      "principle": "Understandable",
+      "intent": "Provide correction suggestions when known and appropriate for input errors.",
+      "anchor": "error-suggestion",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#error-suggestion",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/error-suggestion.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag333",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#error-suggestion",
+        "https://www.w3.org/WAI/WCAG22/Understanding/error-suggestion.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.3.4",
+      "title": "Error Prevention (Legal, Financial, Data)",
+      "level": "AA",
+      "principle": "Understandable",
+      "intent": "Provide specified safeguards for submissions involving legal commitments, financial transactions, or user-controlled data.",
+      "anchor": "error-prevention-legal-financial-data",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#error-prevention-legal-financial-data",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/error-prevention-legal-financial-data.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag334",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#error-prevention-legal-financial-data",
+        "https://www.w3.org/WAI/WCAG22/Understanding/error-prevention-legal-financial-data.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.3.7",
+      "title": "Redundant Entry",
+      "level": "A",
+      "principle": "Understandable",
+      "intent": "Avoid requiring users to re-enter information already supplied in the same process, subject to exceptions.",
+      "anchor": "redundant-entry",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#redundant-entry",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/redundant-entry.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag337",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#redundant-entry",
+        "https://www.w3.org/WAI/WCAG22/Understanding/redundant-entry.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "3.3.8",
+      "title": "Accessible Authentication (Minimum)",
+      "level": "AA",
+      "principle": "Understandable",
+      "intent": "Avoid requiring a cognitive function test for authentication unless an exception or alternative applies.",
+      "anchor": "accessible-authentication-minimum",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#accessible-authentication-minimum",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag338",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": false,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#accessible-authentication-minimum",
+        "https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "4.1.2",
+      "title": "Name, Role, Value",
+      "level": "A",
+      "principle": "Robust",
+      "intent": "Ensure name, role, and state information for user-interface components is programmatically determinable and changeable.",
+      "anchor": "name-role-value",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#name-role-value",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html",
+      "coverage_classification": "partial",
+      "automated_check_exists": true,
+      "axe_check_exists": true,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag412",
+      "axe_rules": [
+        {
+          "rule_id": "area-alt",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag244",
+            "wcag412",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT6.a",
+            "EN-301-549",
+            "EN-9.2.4.4",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-1.1.2"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <area> elements of image maps have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/area-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-allowed-attr",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure an element's role supports its ARIA attributes",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-allowed-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-braille-equivalent",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure aria-braillelabel and aria-brailleroledescription have a non-braille equivalent",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-braille-equivalent?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-command-name",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "TTv5",
+            "TT6.a",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-11.9.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure every ARIA button, link and menuitem has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-command-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-conditional-attr",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure ARIA attributes are used as described in the specification of the element's role",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-conditional-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-deprecated-role",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure elements do not use deprecated roles",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-deprecated-role?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-hidden-body",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag131",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-10.8.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure aria-hidden=\"true\" is not present on the document body.",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-hidden-body?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-hidden-focus",
+          "tags": [
+            "cat.name-role-value",
+            "wcag2a",
+            "wcag412",
+            "TTv5",
+            "TT6.a",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-10.8.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure aria-hidden elements are not focusable nor contain focusable elements",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-hidden-focus?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-input-field-name",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "TTv5",
+            "TT5.c",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-11.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure every ARIA input field has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-input-field-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-prohibited-attr",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure ARIA attributes are not prohibited for an element's role",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-prohibited-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-required-attr",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure elements with ARIA roles have all required ARIA attributes",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-required-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-roledescription",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "deprecated"
+          ],
+          "package_enabled": false,
+          "selected_by_scan": true,
+          "effective_enabled": false,
+          "description": "Ensure aria-roledescription is only used on elements with an implicit or explicit role",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-roledescription?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-roles",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure all elements with a role attribute use a valid value",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-roles?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-tab-name",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "TTv5",
+            "TT5.c",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure every ARIA tab node has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-tab-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-toggle-field-name",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "TTv5",
+            "TT5.c",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure every ARIA toggle field has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-toggle-field-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-tooltip-name",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure every ARIA tooltip node has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-tooltip-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-valid-attr",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure attributes that begin with aria- are valid ARIA attributes",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-valid-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-valid-attr-value",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure all ARIA attributes have valid values",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-valid-attr-value?application=axeAPI"
+        },
+        {
+          "rule_id": "button-name",
+          "tags": [
+            "cat.name-role-value",
+            "wcag2a",
+            "wcag412",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT6.a",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-11.9.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure buttons have discernible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/button-name?application=axeAPI"
+        },
+        {
+          "rule_id": "duplicate-id-aria",
+          "tags": [
+            "cat.parsing",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-8.2.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure every id attribute value used in ARIA and in labels is unique",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/duplicate-id-aria?application=axeAPI"
+        },
+        {
+          "rule_id": "frame-title",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag412",
+            "section508",
+            "section508.22.i",
+            "TTv5",
+            "TT12.d",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-2.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <iframe> and <frame> elements have an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/frame-title?application=axeAPI"
+        },
+        {
+          "rule_id": "frame-title-unique",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag412",
+            "TTv5",
+            "TT12.d",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-2.2.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <iframe> and <frame> elements contain a unique title attribute",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/frame-title-unique?application=axeAPI"
+        },
+        {
+          "rule_id": "input-button-name",
+          "tags": [
+            "cat.name-role-value",
+            "wcag2a",
+            "wcag412",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT5.c",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-11.9.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure input buttons have discernible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/input-button-name?application=axeAPI"
+        },
+        {
+          "rule_id": "input-image-alt",
+          "tags": [
+            "cat.text-alternatives",
+            "wcag2a",
+            "wcag111",
+            "wcag412",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT7.a",
+            "EN-301-549",
+            "EN-9.1.1.1",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-1.1.3"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure <input type=\"image\"> elements have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/input-image-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "label",
+          "tags": [
+            "cat.forms",
+            "wcag2a",
+            "wcag412",
+            "section508",
+            "section508.22.n",
+            "TTv5",
+            "TT5.c",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-11.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure every form element has a label",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/label?application=axeAPI"
+        },
+        {
+          "rule_id": "link-name",
+          "tags": [
+            "cat.name-role-value",
+            "wcag2a",
+            "wcag244",
+            "wcag412",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT6.a",
+            "EN-301-549",
+            "EN-9.2.4.4",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-6.2.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure links have discernible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI"
+        },
+        {
+          "rule_id": "nested-interactive",
+          "tags": [
+            "cat.keyboard",
+            "wcag2a",
+            "wcag412",
+            "TTv5",
+            "TT6.a",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure interactive controls are not nested as they are not always announced by screen readers or can cause focus problems for assistive technologies",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/nested-interactive?application=axeAPI"
+        },
+        {
+          "rule_id": "select-name",
+          "tags": [
+            "cat.forms",
+            "wcag2a",
+            "wcag412",
+            "section508",
+            "section508.22.n",
+            "TTv5",
+            "TT5.c",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-11.1.1"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure select element has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/select-name?application=axeAPI"
+        },
+        {
+          "rule_id": "summary-name",
+          "tags": [
+            "cat.name-role-value",
+            "wcag2a",
+            "wcag412",
+            "section508",
+            "section508.22.a",
+            "TTv5",
+            "TT6.a",
+            "EN-301-549",
+            "EN-9.4.1.2"
+          ],
+          "package_enabled": true,
+          "selected_by_scan": true,
+          "effective_enabled": true,
+          "description": "Ensure summary elements have discernible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/summary-name?application=axeAPI"
+        }
+      ],
+      "failure_patterns": [
+        {
+          "rule_id": "area-alt",
+          "description": "Ensure <area> elements of image maps have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/area-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-allowed-attr",
+          "description": "Ensure an element's role supports its ARIA attributes",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-allowed-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-braille-equivalent",
+          "description": "Ensure aria-braillelabel and aria-brailleroledescription have a non-braille equivalent",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-braille-equivalent?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-command-name",
+          "description": "Ensure every ARIA button, link and menuitem has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-command-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-conditional-attr",
+          "description": "Ensure ARIA attributes are used as described in the specification of the element's role",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-conditional-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-deprecated-role",
+          "description": "Ensure elements do not use deprecated roles",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-deprecated-role?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-hidden-body",
+          "description": "Ensure aria-hidden=\"true\" is not present on the document body.",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-hidden-body?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-hidden-focus",
+          "description": "Ensure aria-hidden elements are not focusable nor contain focusable elements",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-hidden-focus?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-input-field-name",
+          "description": "Ensure every ARIA input field has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-input-field-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-prohibited-attr",
+          "description": "Ensure ARIA attributes are not prohibited for an element's role",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-prohibited-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-required-attr",
+          "description": "Ensure elements with ARIA roles have all required ARIA attributes",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-required-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-roles",
+          "description": "Ensure all elements with a role attribute use a valid value",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-roles?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-tab-name",
+          "description": "Ensure every ARIA tab node has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-tab-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-toggle-field-name",
+          "description": "Ensure every ARIA toggle field has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-toggle-field-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-tooltip-name",
+          "description": "Ensure every ARIA tooltip node has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-tooltip-name?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-valid-attr",
+          "description": "Ensure attributes that begin with aria- are valid ARIA attributes",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-valid-attr?application=axeAPI"
+        },
+        {
+          "rule_id": "aria-valid-attr-value",
+          "description": "Ensure all ARIA attributes have valid values",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/aria-valid-attr-value?application=axeAPI"
+        },
+        {
+          "rule_id": "button-name",
+          "description": "Ensure buttons have discernible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/button-name?application=axeAPI"
+        },
+        {
+          "rule_id": "duplicate-id-aria",
+          "description": "Ensure every id attribute value used in ARIA and in labels is unique",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/duplicate-id-aria?application=axeAPI"
+        },
+        {
+          "rule_id": "frame-title",
+          "description": "Ensure <iframe> and <frame> elements have an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/frame-title?application=axeAPI"
+        },
+        {
+          "rule_id": "frame-title-unique",
+          "description": "Ensure <iframe> and <frame> elements contain a unique title attribute",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/frame-title-unique?application=axeAPI"
+        },
+        {
+          "rule_id": "input-button-name",
+          "description": "Ensure input buttons have discernible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/input-button-name?application=axeAPI"
+        },
+        {
+          "rule_id": "input-image-alt",
+          "description": "Ensure <input type=\"image\"> elements have alternative text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/input-image-alt?application=axeAPI"
+        },
+        {
+          "rule_id": "label",
+          "description": "Ensure every form element has a label",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/label?application=axeAPI"
+        },
+        {
+          "rule_id": "link-name",
+          "description": "Ensure links have discernible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI"
+        },
+        {
+          "rule_id": "nested-interactive",
+          "description": "Ensure interactive controls are not nested as they are not always announced by screen readers or can cause focus problems for assistive technologies",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/nested-interactive?application=axeAPI"
+        },
+        {
+          "rule_id": "select-name",
+          "description": "Ensure select element has an accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/select-name?application=axeAPI"
+        },
+        {
+          "rule_id": "summary-name",
+          "description": "Ensure summary elements have discernible text",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.14/summary-name?application=axeAPI"
+        }
+      ],
+      "limitations": [
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": false,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#name-role-value",
+        "https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html",
+        "https://dequeuniversity.com/rules/axe/4.14/area-alt?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-allowed-attr?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-braille-equivalent?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-command-name?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-conditional-attr?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-deprecated-role?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-hidden-body?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-hidden-focus?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-input-field-name?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-prohibited-attr?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-required-attr?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-roles?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-tab-name?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-toggle-field-name?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-tooltip-name?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-valid-attr-value?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/aria-valid-attr?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/button-name?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/duplicate-id-aria?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/frame-title-unique?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/frame-title?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/input-button-name?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/input-image-alt?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/label?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/nested-interactive?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/select-name?application=axeAPI",
+        "https://dequeuniversity.com/rules/axe/4.14/summary-name?application=axeAPI"
+      ],
+      "relevant_tests": [
+        "tests/test_capture.py::test_accessibility_scan_preserves_axe_results_and_specific_evidence"
+      ],
+      "outstanding_gaps": [
+        "Validate the implemented checks with criterion-specific counterexamples against the criterion's Understanding guidance; retain manual review for aspects beyond their bounded scope.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    },
+    {
+      "id": "4.1.3",
+      "title": "Status Messages",
+      "level": "AA",
+      "principle": "Robust",
+      "intent": "Make status messages programmatically determinable without requiring focus, using appropriate roles or properties.",
+      "anchor": "status-messages",
+      "criterion_url": "https://www.w3.org/TR/WCAG22/#status-messages",
+      "understanding_url": "https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html",
+      "coverage_classification": "manual_evaluation_required",
+      "automated_check_exists": false,
+      "axe_check_exists": false,
+      "keyboard_focus_check_exists": false,
+      "keyboard_focus_checks": [],
+      "text_reflow_check_exists": false,
+      "text_reflow_checks": [],
+      "axe_criterion_tag": "wcag413",
+      "axe_rules": [],
+      "failure_patterns": [],
+      "limitations": [
+        "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+        "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+        "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed."
+      ],
+      "manual_evaluation_needed": true,
+      "keyboard_testing_needed": false,
+      "interaction_testing_needed": true,
+      "assistive_technology_testing_needed": true,
+      "evidence_links": [
+        "https://www.w3.org/TR/WCAG22/#status-messages",
+        "https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html"
+      ],
+      "relevant_tests": [],
+      "outstanding_gaps": [
+        "Evaluate representative content and states with a trained reviewer and, where applicable, assistive technology; define bounded automated support only after validating it against WCAG guidance.",
+        "No result from this scan may be described as WCAG conformance."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Scrollable data table</title>
+  <style>
+    #table-scroll { width: 100%; overflow-x: auto; }
+    table { min-width: 700px; border-collapse: collapse; }
+    th, td { padding: 0.5rem; border: 1px solid #777; }
+  </style>
+</head>
+<body>
+  <h1>Quarterly results</h1>
+  <div id="table-scroll">
+    <table id="data-table">
+      <thead><tr><th>Department</th><th>Quarter one</th><th>Quarter two</th><th>Quarter three</th></tr></thead>
+      <tbody><tr><td>Research</td><td>12</td><td>14</td><td>16</td></tr></tbody>
+    </table>
+  </div>
+</body>
+</html>

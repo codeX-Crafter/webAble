@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Delayed text fixture</title>
+</head>
+<body>
+  <main id="content"></main>
+  <script>
+    setTimeout(() => {
+      const paragraph = document.createElement("p");
+      paragraph.id = "late-content";
+      paragraph.textContent = "Text inserted after the initial document event.";
+      document.querySelector("#content").append(paragraph);
+    }, 100);
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Potential keyboard trap fixture</title></head>
+<body>
+  <button id="before-trap" type="button">Before</button>
+  <button id="trapped" type="button">Potential trap</button>
+  <button id="after-trap" type="button">After</button>
+  <script>
+    document.addEventListener("keydown", event => {
+      if (event.key === "Tab" && event.target.id === "trapped") {
+        event.preventDefault();
+      }
+    }, true);
+  </script>
+</body>
+</html>

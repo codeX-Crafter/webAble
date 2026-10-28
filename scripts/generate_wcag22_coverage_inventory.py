@@ -1,0 +1,459 @@
+"""Generate the WCAG inventory from the checked-in source list and pinned axe metadata."""
+
+from __future__ import annotations
+
+import json
+import subprocess
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE_PATH = ROOT / "tests" / "fixtures" / "wcag22_criteria_source.json"
+JSON_PATH = ROOT / "docs" / "wcag-22-coverage-inventory.json"
+MARKDOWN_PATH = ROOT / "docs" / "wcag-22-coverage-inventory.md"
+SCANNER_TAGS = [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa",
+    "wcag22aa",
+]
+
+# These criteria need content, interaction, cross-page, media, or AT judgment
+# and have no enabled selected rule with the criterion's own WCAG tag.
+MANUAL_ONLY = {
+    "1.2.1", "1.2.3", "1.2.4", "1.2.5",
+    "1.3.2", "1.3.3", "1.4.5",
+    "2.1.2", "2.1.4", "2.3.1", "2.4.3", "2.4.5",
+    "2.4.6", "2.4.7", "2.4.11", "2.5.1", "2.5.2", "2.5.4", "2.5.7",
+    "3.2.1", "3.2.2", "3.2.3", "3.2.4", "3.2.6",
+    "3.3.1", "3.3.3", "3.3.4", "3.3.7", "3.3.8", "4.1.3",
+}
+KEYBOARD_REQUIRED = {
+    "2.1.1", "2.1.2", "2.1.4", "2.4.3", "2.4.7", "2.4.11",
+    "2.5.1", "2.5.2", "2.5.4", "2.5.7", "3.2.1",
+}
+INTERACTION_REQUIRED = {
+    "1.2.2", "1.2.4", "1.3.4", "1.4.2", "1.4.4", "1.4.10",
+    "1.4.12", "1.4.13", "2.1.1", "2.1.2", "2.1.4", "2.2.1",
+    "2.2.2", "2.3.1", "2.4.3", "2.4.7", "2.4.11", "2.5.1",
+    "2.5.2", "2.5.4", "2.5.7", "3.2.1", "3.2.2", "3.3.1",
+    "3.3.3", "3.3.4", "3.3.7", "3.3.8", "4.1.3",
+}
+ASSISTIVE_TECHNOLOGY_REQUIRED = {
+    "1.1.1", "1.3.1", "1.3.5", "2.1.1", "2.4.4", "2.5.3",
+    "3.1.1", "3.1.2", "3.3.1", "3.3.2", "4.1.2", "4.1.3",
+}
+TESTS_BY_RULE = {
+    "image-alt": [
+        "tests/test_capture.py::test_accessibility_scan_preserves_axe_results_and_specific_evidence"
+    ],
+    "color-contrast": [
+        "tests/test_capture.py::test_accessibility_scan_preserves_axe_results_and_specific_evidence"
+    ],
+    "aria-required-parent": [
+        "tests/test_capture.py::test_accessibility_scan_preserves_axe_results_and_specific_evidence"
+    ],
+    "label": [
+        "tests/test_capture.py::test_accessibility_scan_preserves_axe_results_and_specific_evidence"
+    ],
+    "button-name": [
+        "tests/test_capture.py::test_accessibility_scan_preserves_axe_results_and_specific_evidence"
+    ],
+}
+KEYBOARD_FOCUS_CHECKS = {
+    "2.1.1": [
+        "Sequential Tab/Shift+Tab focus progression is sampled without activating controls."
+    ],
+    "2.1.2": [
+        "A bounded Tab sequence looks for focus that stops advancing; suspected traps require review."
+    ],
+    "2.4.3": [
+        "The observed Tab sequence is recorded; whether its order preserves meaning requires human review."
+    ],
+    "2.4.7": [
+        "Keyboard focus state is compared with a limited set of computed CSS indicator properties."
+    ],
+    "2.4.11": [
+        "Hit-testing samples focused-element points for possible complete occlusion."
+    ],
+}
+TEXT_REFLOW_CHECKS = {
+    "1.4.4": [
+        "A bounded per-element computed-font-size override probes 200% text for possible clipping, ellipsis, and overlap; text availability is not determined, so these observations require review."
+    ],
+    "1.4.10": [
+        "The existing page is measured at 320 CSS pixels wide; text and document-level overflow are evidence for review, not violations by themselves.",
+        "A 256 CSS-pixel height probe runs when a table or ARIA table/grid is detected; this heuristic does not determine whether an exception applies, and browser zoom is unsupported."
+    ],
+}
+TESTS_BY_REFLOW_CRITERION = {
+    "1.4.4": [
+        "tests/test_capture.py::test_text_reflow_clipped_text_requires_availability_review",
+        "tests/test_capture.py::test_text_reflow_ellipsis_disclosure_and_nested_sizes_need_review",
+        "tests/test_capture.py::test_text_reflow_disclosure_remains_operable_when_clipping_is_reported",
+        "tests/test_capture.py::test_text_reflow_reports_box_overlap_without_claiming_obscuration",
+        "tests/test_capture.py::test_text_reflow_usable_fixture_has_no_detected_clipping",
+        "tests/test_capture.py::test_text_reflow_candidate_limit_prevents_clean_classification",
+    ],
+    "1.4.10": [
+        "tests/test_capture.py::test_text_reflow_flags_320px_overflow_for_review",
+        "tests/test_capture.py::test_text_reflow_does_not_fail_legitimate_table_scrolling",
+        "tests/test_capture.py::test_text_reflow_reports_unbreakable_text_overflow",
+        "tests/test_capture.py::test_text_reflow_responsive_content_replacement_needs_review",
+    ],
+}
+
+
+def load_axe_metadata() -> dict:
+    script = (
+        "const axe=require('axe-core');"
+        "console.log(JSON.stringify({version:axe.version,rules:axe.getRules()}));"
+    )
+    completed = subprocess.run(
+        ["node", "-e", script],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    metadata = json.loads(completed.stdout)
+    if metadata["version"] != "4.14.0":
+        raise RuntimeError(
+            f"Expected pinned axe-core 4.14.0, found {metadata['version']}."
+        )
+    return metadata
+
+
+def _criterion_tag(criterion_id: str) -> str:
+    return "wcag" + criterion_id.replace(".", "")
+
+
+def build_inventory(source: dict, axe: dict) -> dict:
+    entries = []
+    mapped_count = 0
+    for criterion in source["criteria"]:
+        criterion_id = criterion["id"]
+        tag = _criterion_tag(criterion_id)
+        axe_rules = []
+        for rule in axe["rules"]:
+            if tag not in rule.get("tags", []):
+                continue
+            package_enabled = bool(rule.get("enabled", False))
+            selected_by_scan = any(
+                scanner_tag in rule.get("tags", []) for scanner_tag in SCANNER_TAGS
+            )
+            axe_rules.append(
+                {
+                    "rule_id": rule["ruleId"],
+                    "tags": rule["tags"],
+                    "package_enabled": package_enabled,
+                    "selected_by_scan": selected_by_scan,
+                    "effective_enabled": package_enabled and selected_by_scan,
+                    "description": rule.get("description", ""),
+                    "help_url": rule.get("helpUrl", ""),
+                }
+            )
+        axe_rules.sort(key=lambda item: item["rule_id"])
+        active = [rule for rule in axe_rules if rule["effective_enabled"]]
+        keyboard_checks = KEYBOARD_FOCUS_CHECKS.get(criterion_id, [])
+        reflow_checks = TEXT_REFLOW_CHECKS.get(criterion_id, [])
+        if active or keyboard_checks or reflow_checks:
+            classification = "partial"
+            if active:
+                mapped_count += 1
+            next_step = (
+                "Validate the implemented checks with criterion-specific counterexamples "
+                "against the criterion's Understanding guidance; retain manual review "
+                "for aspects beyond their bounded scope."
+            )
+        elif criterion_id in MANUAL_ONLY:
+            classification = "manual_evaluation_required"
+            next_step = (
+                "Evaluate representative content and states with a trained reviewer "
+                "and, where applicable, assistive technology; define bounded "
+                "automated support only after validating it against WCAG guidance."
+            )
+        else:
+            classification = "not_implemented"
+            next_step = (
+                "Design and validate a criterion-specific check or interaction "
+                "scenario before adding automated coverage; do not infer a pass "
+                "from the absence of an axe mapping."
+            )
+        patterns = [
+            {
+                "rule_id": rule["rule_id"],
+                "description": rule["description"],
+                "help_url": rule["help_url"],
+            }
+            for rule in active
+        ]
+        limitations = [
+            "A WCAG tag records the axe rule author's criterion association; it is not evidence that the rule covers the full success criterion.",
+            "The scanner records rule outcomes only when the rule runs and reports them. An absent result does not establish that the criterion passed.",
+        ]
+        if not active and not keyboard_checks and not reflow_checks:
+            limitations.insert(
+                0,
+                "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag.",
+            )
+        elif not active and (keyboard_checks or reflow_checks):
+            limitations.insert(
+                0,
+                "No enabled axe rule selected by the current scanner carries this criterion's exact WCAG tag; the listed WebAble probes are separate, bounded evidence and do not establish criterion conformance.",
+            )
+        rule_tests = sorted(
+            {
+                test
+                for rule in active
+                for test in TESTS_BY_RULE.get(rule["rule_id"], [])
+            }
+        )
+        rule_tests.extend(TESTS_BY_REFLOW_CRITERION.get(criterion_id, []))
+        criterion_url = f"{source['source']}#{criterion['anchor']}"
+        understanding_url = (
+            "https://www.w3.org/WAI/WCAG22/Understanding/"
+            f"{criterion['anchor']}.html"
+        )
+        entries.append(
+            {
+                **criterion,
+                "criterion_url": criterion_url,
+                "understanding_url": understanding_url,
+                "coverage_classification": classification,
+                "automated_check_exists": bool(active or keyboard_checks or reflow_checks),
+                "axe_check_exists": bool(active),
+                "keyboard_focus_check_exists": bool(keyboard_checks),
+                "keyboard_focus_checks": keyboard_checks,
+                "text_reflow_check_exists": bool(reflow_checks),
+                "text_reflow_checks": reflow_checks,
+                "axe_criterion_tag": tag,
+                "axe_rules": axe_rules,
+                "failure_patterns": patterns,
+                "limitations": limitations,
+                "manual_evaluation_needed": True,
+                "keyboard_testing_needed": criterion_id in KEYBOARD_REQUIRED,
+                "interaction_testing_needed": criterion_id in INTERACTION_REQUIRED,
+                "assistive_technology_testing_needed": (
+                    criterion_id in ASSISTIVE_TECHNOLOGY_REQUIRED
+                ),
+                "evidence_links": [
+                    criterion_url,
+                    understanding_url,
+                    *sorted({rule["help_url"] for rule in active if rule["help_url"]}),
+                ],
+                "relevant_tests": rule_tests,
+                "outstanding_gaps": [
+                    next_step,
+                    "No result from this scan may be described as WCAG conformance.",
+                ],
+            }
+        )
+    return {
+        "inventory_version": "2.0",
+        "wcag_version": "2.2",
+        "axe_core_version": axe["version"],
+        "source_inventory": {
+            "path": "tests/fixtures/wcag22_criteria_source.json",
+            "url": source["source"],
+            "current_url": source["current_url"],
+            "retrieved": source["retrieved"],
+            "description": "Independent checked-in transcription of in-scope criterion identifiers, titles, levels, principles, and anchors from the W3C Recommendation.",
+        },
+        "scanner_configuration": {
+            "run_only_tags": SCANNER_TAGS,
+            "effective_mapping_definition": (
+                "A criterion mapping is effective only when an axe rule contains "
+                "the exact wcag{criterion-id-without-dots} tag, is enabled in "
+                "axe-core package metadata, and also contains at least one configured "
+                "scanner runOnly version/level tag."
+            ),
+        },
+        "summary": {
+            "criterion_count": len(entries),
+            "mapped_criteria_with_enabled_selected_rules": mapped_count,
+            "classification_counts": {
+                name: sum(
+                    entry["coverage_classification"] == name for entry in entries
+                )
+                for name in (
+                    "automated",
+                    "partial",
+                    "manual_evaluation_required",
+                    "not_implemented",
+                )
+            },
+        },
+        "scope_exclusions": source.get("scope_exclusions", []),
+        "criteria": entries,
+    }
+
+
+def render_markdown(inventory: dict) -> str:
+    summary = inventory["summary"]
+    lines = [
+        "# WCAG 2.2 Level A/AA Coverage Inventory",
+        "",
+        f"**Inventory version:** {inventory['inventory_version']}  ",
+        f"**Standards baseline:** [WCAG 2.2 W3C Recommendation]({inventory['source_inventory']['url']})  ",
+        f"**Engine:** axe-core {inventory['axe_core_version']} (pinned package metadata)  ",
+        "**In-scope criteria:** 55 (all A and AA criteria; AAA excluded; obsolete 4.1.1 excluded)  ",
+        f"**Criteria with at least one enabled, scanner-selected exact WCAG criterion tag:** {summary['mapped_criteria_with_enabled_selected_rules']} of {summary['criterion_count']}",
+        "",
+        "This inventory is evidence of rule associations and current checks, not a WCAG conformance statement. A WCAG tag on an axe rule is an association published in the rule metadata, not proof that the rule covers the whole success criterion. A rule result applies only to its documented test conditions and reported nodes.",
+        "",
+        "## Classification definitions",
+        "",
+        "- `automated`: an implemented check fully evaluates the success criterion within its declared scope. None are assigned: no current axe tag mapping establishes full criterion coverage.",
+        "- `partial`: one or more bounded automated probes or enabled rules selected by the current scan provide evidence for part of the criterion; the checks cover only their documented test conditions.",
+        "- `manual_evaluation_required`: no enabled selected axe rule carries the exact criterion tag and representative human, assistive-technology, content, media, or interaction review is necessary.",
+        "- `not_implemented`: no enabled selected exact-tag check exists; a bounded technical or interaction check may be developed, but none is implemented.",
+        "",
+        "A criterion may need manual review even when classified `partial`. `automated_check_exists` includes bounded WebAble keyboard/focus and text/reflow probes when listed, while `axe_check_exists` records exact-tagged axe coverage separately. Neither means the whole criterion is automated. The scanner runs with these exact configuration tags: "
+        + ", ".join(f"`{tag}`" for tag in inventory["scanner_configuration"]["run_only_tags"])
+        + ". Effective rule selection requires both package `enabled: true` and a matching runOnly tag.",
+        "",
+        "## Summary",
+        "",
+        "| Classification | Count |",
+        "|---|---:|",
+    ]
+    for name, count in summary["classification_counts"].items():
+        lines.append(f"| `{name}` | {count} |")
+    lines.extend(
+        [
+            "",
+            "The 55 is the number of applicable WCAG 2.2 A/AA success criteria, not a scanner coverage percentage. The mapped-criterion count measures enabled, configured axe rules that carry the exact criterion tag; it is not a conformance rate or completeness measure.",
+            "",
+            "## Criterion inventory",
+            "",
+            "The checked-in criterion baseline is `tests/fixtures/wcag22_criteria_source.json`, independently transcribed from the normative Recommendation. Axe rule IDs, full tags, enabled status, descriptions, and help links below are generated from the installed pinned package metadata. To regenerate after a deliberate baseline or axe update, run `python scripts/generate_wcag22_coverage_inventory.py` after `npm ci`.",
+            "",
+        ]
+    )
+    for criterion in inventory["criteria"]:
+        lines.extend(
+            [
+                f"### {criterion['id']} — {criterion['title']}",
+                "",
+                f"- **Level / principle:** {criterion['level']} / {criterion['principle']}",
+                f"- **Intent:** {criterion['intent']}",
+                f"- **Coverage:** `{criterion['coverage_classification']}`",
+                f"- **Automated check exists:** {str(criterion['automated_check_exists']).lower()}",
+                f"- **Axe check exists:** {str(criterion['axe_check_exists']).lower()}",
+                f"- **WebAble keyboard/focus check exists:** {str(criterion['keyboard_focus_check_exists']).lower()}",
+                f"- **WebAble text/reflow check exists:** {str(criterion['text_reflow_check_exists']).lower()}",
+                f"- **Exact criterion tag:** `{criterion['axe_criterion_tag']}`",
+                f"- **Manual / keyboard / interaction / assistive-technology testing needed:** "
+                f"{str(criterion['manual_evaluation_needed']).lower()} / "
+                f"{str(criterion['keyboard_testing_needed']).lower()} / "
+                f"{str(criterion['interaction_testing_needed']).lower()} / "
+                f"{str(criterion['assistive_technology_testing_needed']).lower()}",
+                f"- **Normative criterion:** [{criterion['id']} {criterion['title']}]({criterion['criterion_url']})",
+                f"- **Understanding:** [Understanding {criterion['id']}]({criterion['understanding_url']})",
+            ]
+        )
+        if criterion["axe_rules"]:
+            lines.extend(
+                [
+                    "- **Associated axe rules** (all exact WCAG-tagged rules in package metadata):",
+                ]
+            )
+            for rule in criterion["axe_rules"]:
+                selected = "selected" if rule["selected_by_scan"] else "not selected"
+                lines.append(
+                    f"  - [`{rule['rule_id']}`]({rule['help_url']}) — "
+                    f"package enabled: `{str(rule['package_enabled']).lower()}`; "
+                    f"scanner: `{selected}`; effective: "
+                    f"`{str(rule['effective_enabled']).lower()}`; "
+                    f"tags: {', '.join(f'`{tag}`' for tag in rule['tags'])}"
+                )
+        else:
+            lines.append("- **Associated axe rules:** none with this criterion tag in axe-core 4.14.0 metadata.")
+        if criterion["failure_patterns"]:
+            lines.append("- **Implemented failure patterns (rule-description scope, not exhaustive):**")
+            for pattern in criterion["failure_patterns"]:
+                lines.append(
+                    f"  - `{pattern['rule_id']}`: {pattern['description']} "
+                    f"([rule help]({pattern['help_url']}))"
+                )
+        else:
+            lines.append("- **Implemented failure patterns:** none mapped by an enabled, selected rule carrying this criterion's exact tag.")
+        if criterion["keyboard_focus_checks"]:
+            lines.append("- **Bounded keyboard/focus checks:**")
+            lines.extend(
+                f"  - {check}" for check in criterion["keyboard_focus_checks"]
+            )
+        if criterion["text_reflow_checks"]:
+            lines.append("- **Bounded text/reflow checks:**")
+            lines.extend(
+                f"  - {check}" for check in criterion["text_reflow_checks"]
+            )
+        lines.extend(
+            [
+                "- **Limitations:**",
+                *[f"  - {limitation}" for limitation in criterion["limitations"]],
+                "- **Relevant existing tests:** "
+                + (
+                    ", ".join(f"`{test}`" for test in criterion["relevant_tests"])
+                    if criterion["relevant_tests"]
+                    else "No focused criterion-specific fixture assertion currently exists."
+                ),
+                "- **Outstanding gaps / next step:**",
+                *[f"  - {gap}" for gap in criterion["outstanding_gaps"]],
+                "- **Evidence links:** "
+                + ", ".join(f"[{index + 1}]({link})" for index, link in enumerate(criterion["evidence_links"])),
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "## Method and limitations",
+            "",
+            "The 55 criterion identifiers, exact titles, levels, principles, and anchors are checked against the separate offline source transcription in `tests/fixtures/wcag22_criteria_source.json`. The mapping registry is derived from `axe-core@4.14.0` `getRules()` metadata. A rule is effective for this scanner only if the package reports it enabled, it has the exact criterion tag (`wcag` + criterion digits), and it also has one of the configured runOnly tags. The scanner configuration and inventory are validated offline in `tests/test_wcag22_inventory.py`.",
+            "",
+            "The inventory's rule descriptions identify intended rule scope, not all failure conditions or all WCAG exceptions. Consult each linked axe rule help page and W3C Understanding document before interpreting evidence. A tag may be an association with only one aspect of a broad criterion; missing mappings are explicitly empty and do not imply a pass. Rule `incomplete` outcomes need human review and are not confirmed violations.",
+            "",
+            "The 2.4.13 Focus Appearance criterion is Level AAA according to W3C and is therefore intentionally excluded from the A/AA criteria list. The keyboard/focus audit does not measure focus-indicator perimeter area or 3:1 contrast and does not implement 2.4.13.",
+            "",
+            "### Scope exclusions",
+            "",
+            *[
+                f"- [{item['id']} {item['title']}]({item['url']}) — {item['reason']}"
+                for item in inventory["scope_exclusions"]
+            ],
+            "",
+            "The current scan observes one settled rendered state per viewport and includes bounded text enlargement and a 320 CSS-pixel reflow probe. Actual browser zoom is not simulated; 256 CSS-pixel height testing is conditional on detecting a table or ARIA table/grid. The text override is not equivalent to every browser text-only zoom behavior. The scan does not automate all keyboard traversal/focus order, interactions, media inspection, site-wide comparisons, cognitive-function/authentication evaluation, or assistive-technology announcement testing. It does not establish that the selected page, a process, or a site conforms. Browser/runtime failures and evidence caps are represented separately by the API scan status.",
+            "",
+            "### Source references",
+            "",
+            f"- [WCAG 2.2 Recommendation]({inventory['source_inventory']['url']})",
+            f"- [W3C current WCAG Recommendation URL]({inventory['source_inventory']['current_url']}) (resolves to the WCAG 2.2 Recommendation)",
+            "- [WCAG 2.2 Understanding documents](https://www.w3.org/WAI/WCAG22/Understanding/)",
+            "- [W3C evaluation guidance](https://www.w3.org/WAI/test-evaluate/)",
+            "- [axe-core API and tag filtering](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md)",
+            "- [axe-core rule descriptions](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def main() -> None:
+    source = json.loads(SOURCE_PATH.read_text(encoding="utf-8"))
+    axe = load_axe_metadata()
+    inventory = build_inventory(source, axe)
+    JSON_PATH.write_text(
+        json.dumps(inventory, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    MARKDOWN_PATH.write_text(render_markdown(inventory), encoding="utf-8")
+    print(
+        f"Wrote {inventory['summary']['criterion_count']} criteria; "
+        f"{inventory['summary']['mapped_criteria_with_enabled_selected_rules']} "
+        "have enabled scanner-selected exact-tag rules."
+    )
+
+
+if __name__ == "__main__":
+    main()
