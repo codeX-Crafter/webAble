@@ -1,0 +1,8 @@
+<!doctype html>
+<html><head><title>Delayed fixture</title></head>
+<body><div id="result">Waiting</div>
+<script>setTimeout(() => {
+    document.querySelector("#result").textContent = "Updated after delay";
+    document.title = "Delayed fixture updated";
+}, 20);</script>
+</body></html>

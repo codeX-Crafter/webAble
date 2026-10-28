@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Accessibility engine fixture</title>
+</head>
+<body>
+  <header><h1>Accessibility test page</h1></header>
+  <main>
+    <form>
+      <label for="valid-input">Email</label>
+      <input id="valid-input" type="email">
+      <input id="unlabeled-input" type="text" value="fixture-secret">
+      <button id="unnamed-button" type="button"></button>
+      <button type="submit">Save form</button>
+      <div id="orphaned-listitem" role="listitem">Orphaned list item</div>
+      <button id="broken-relationship" aria-labelledby="missing-name"></button>
+    </form>
+
+    <img id="missing-alt" src="/valid.svg">
+    <img id="valid-image" src="/valid.svg" alt="A small blue square">
+
+    <p id="low-contrast" style="color: #ffffff; background: #ffffff">
+      Text that does not contrast with its background.
+    </p>
+    <p id="sufficient-contrast" style="color: #111111; background: #ffffff">
+      Clearly visible text.
+    </p>
+    <p>
+      <img id="subjective-alt" src="/valid.svg" alt="A picture">
+      The surrounding content is needed to judge whether this alternative is useful.
+    </p>
+  </main>
+</body>
+</html>

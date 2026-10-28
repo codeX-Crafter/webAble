@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head><title>Functional UX fixture</title></head>
+<body>
+  <a id="redirect-link" href="/redirect-to-ok">Redirect target</a>
+  <a id="broken-link" href="/broken-link">Broken destination</a>
+  <a id="slow-link" href="/slow-link">Slow destination</a>
+  <a id="successful-link" href="/normal">Working destination</a>
+  <a id="private-link" href="http://private.invalid/private-link">Blocked destination</a>
+  <a id="unsafe-redirect" href="/redirect-to-private">Redirect to blocked destination</a>
+  <a id="network-link" href="http://127.0.0.1:1/unreachable">Unavailable destination</a>
+
+  <img id="broken-image" src="/missing.png" alt="Unavailable product image">
+  <img id="successful-image" src="/valid.svg" alt="Available product image">
+  <img id="missing-source" alt="Product image with missing source">
+  <img id="empty-source" src="">
+  <img id="decorative-empty" src="" alt="" role="presentation">
+</body>
+</html>

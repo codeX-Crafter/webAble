@@ -1,0 +1,466 @@
+import asyncio
+import os
+import sys
+from dataclasses import asdict
+from pathlib import Path
+from typing import Literal
+
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
+from playwright.async_api import Error as PlaywrightError
+
+from app.analyzers.audit_aggregation import (
+    AggregationStatus,
+    EvidencePriority,
+    aggregate_audit_findings,
+)
+from app.analyzers.audit_summary import (
+    build_audit_summary,
+)
+from app.analyzers.accessibility import AccessibilityScanStatus
+from app.analyzers.element_horizontal_overflow import (
+    ElementHorizontalOverflowEvidence,
+)
+from app.analyzers.finding_normalization import (
+    NormalizedHorizontalOverflowFinding,
+)
+from app.analyzers.functional_ux import (
+    FunctionalUXFailureCategory,
+    FunctionalUXFindingStatus,
+    FunctionalUXStatus,
+    MAX_LINK_AUDIT_DURATION_SECONDS,
+)
+from app.analyzers.accessibility import ACCESSIBILITY_SCAN_TIMEOUT_SECONDS
+from app.capture.responsive import (
+    ElementDiagnosisStatus,
+    FindingNormalizationStatus,
+    OverflowAnalysisStatus,
+    ViewportCaptureOutcome,
+    ViewportCaptureResult,
+    capture_responsive_viewports,
+)
+from app.capture.runner import BrowserCapture, BrowserCaptureError
+from app.capture.storage import LocalScreenshotStorage
+from app.capture.url_safety import PublicURLSafetyValidator, UnsafeURL
+
+OUTPUT_DIR = Path(os.getenv("WEBABLE_OUTPUT_DIR", "output"))
+NAVIGATION_TIMEOUT_MS = int(os.getenv("WEBABLE_NAVIGATION_TIMEOUT_MS", "15000"))
+SETTLING_PERIOD_MS = int(os.getenv("WEBABLE_SETTLING_PERIOD_MS", "1500"))
+CAPTURE_TIMEOUT_SECONDS = (
+    3
+    * (
+        NAVIGATION_TIMEOUT_MS
+        + SETTLING_PERIOD_MS
+        + MAX_LINK_AUDIT_DURATION_SECONDS * 1_000
+        + ACCESSIBILITY_SCAN_TIMEOUT_SECONDS * 1_000
+    )
+    / 1_000
+    + 15
+)
+MAX_CONCURRENT_CAPTURES = 2
+
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(
+        asyncio.WindowsProactorEventLoopPolicy()
+    )
+
+app = FastAPI(title="WebAble Browser Capture", version="0.1.0")
+capture_slots = asyncio.Semaphore(MAX_CONCURRENT_CAPTURES)
+url_validator = PublicURLSafetyValidator()
+capture_service = BrowserCapture(
+    storage=LocalScreenshotStorage(OUTPUT_DIR),
+    url_validator=url_validator,
+    navigation_timeout_ms=NAVIGATION_TIMEOUT_MS,
+    settling_period_ms=SETTLING_PERIOD_MS,
+)
+
+
+class CaptureRequest(BaseModel):
+    url: str = Field(min_length=1, max_length=4_096)
+
+
+class ViewportSchema(BaseModel):
+    width: int
+    height: int
+
+
+class HorizontalOverflowSchema(BaseModel):
+    scroll_width: int
+    visible_width: int
+    overflow_px: int
+    potential_horizontal_overflow: bool
+
+
+class ElementOverflowDiagnosisSchema(BaseModel):
+    status: ElementDiagnosisStatus
+    findings: list[ElementHorizontalOverflowEvidence]
+    details: list[str]
+
+
+class FunctionalUXFindingSchema(BaseModel):
+    rule_id: Literal["broken_link", "failed_image"]
+    element_selector: str
+    accessible_label: str | None
+    destination_url: str | None
+    failure_category: FunctionalUXFailureCategory
+    status: FunctionalUXFindingStatus
+    evidence: list[str]
+    limitations: list[str]
+
+
+class FunctionalUXAuditSchema(BaseModel):
+    status: FunctionalUXStatus
+    findings: list[FunctionalUXFindingSchema]
+    inconclusive: list[FunctionalUXFindingSchema]
+    checked_links: int
+    checked_images: int
+    details: list[str]
+
+
+class AxeCheckSchema(BaseModel):
+    check_id: str
+    impact: str | None
+    message: str
+    data: dict | list | str | int | float | bool | None
+    related_nodes: list[dict]
+
+
+class AxeNodeSchema(BaseModel):
+    target: list[str | list[str]]
+    html: str
+    impact: str | None
+    failure_summary: str | None
+    any_checks: list[AxeCheckSchema]
+    all_checks: list[AxeCheckSchema]
+    none_checks: list[AxeCheckSchema]
+
+
+class AxeRuleSchema(BaseModel):
+    rule_id: str
+    description: str
+    impact: str | None
+    help: str
+    help_url: str
+    tags: list[str]
+    nodes: list[AxeNodeSchema]
+    failure_summaries: list[str]
+
+
+class AccessibilityScanSchema(BaseModel):
+    status: AccessibilityScanStatus
+    axe_version: str | None
+    violations: list[AxeRuleSchema]
+    incomplete: list[AxeRuleSchema]
+    passes: list[AxeRuleSchema]
+    inapplicable: list[AxeRuleSchema]
+    details: list[str]
+
+
+class NormalizedFindingsSchema(BaseModel):
+    status: FindingNormalizationStatus
+    findings: list[NormalizedHorizontalOverflowFinding]
+    details: list[str]
+
+
+class AuditFindingGroupSchema(BaseModel):
+    group_id: str
+    rule_id: str
+    selector: str
+    priority: EvidencePriority
+    explanation: str
+    affected_viewports: list[str]
+    findings: list[NormalizedHorizontalOverflowFinding]
+
+
+class AuditFindingAggregationSchema(BaseModel):
+    status: AggregationStatus
+    findings: list[AuditFindingGroupSchema]
+    details: list[str]
+
+
+class ViewportMeasurementSchema(BaseModel):
+    name: str
+    width: int
+    overflow_px: int
+
+
+class DocumentOverflowSummarySchema(BaseModel):
+    status: Literal["available", "partial", "unavailable"]
+    detected: bool | None
+    affected_viewports: list[str]
+    measurements: list[ViewportMeasurementSchema]
+
+
+class IssueViewportSchema(BaseModel):
+    name: str
+    width: int
+
+
+class IssueMeasurementSchema(BaseModel):
+    finding_id: str
+    viewport_name: str
+    viewport_width: int
+    element_overflow_px: float
+    document_overflow_px: int | None
+    evidence_correlation: Literal[
+        "direct_geometry_match", "possible_contributor", "unmatched"
+    ]
+
+
+class AuditSummaryIssueSchema(BaseModel):
+    group_id: str
+    rule_id: str
+    selector: str
+    priority: EvidencePriority
+    title: str
+    affected_viewports: list[IssueViewportSchema]
+    measurements: list[IssueMeasurementSchema]
+    explanation: str
+
+
+class AuditSummarySchema(BaseModel):
+    status: Literal["available", "partial", "unavailable"]
+    horizontal_overflow_detected: bool | None
+    affected_viewports: list[str]
+    document_level_overflow: DocumentOverflowSummarySchema
+    issues: list[AuditSummaryIssueSchema]
+    limitations: list[str]
+
+
+class ResponsiveViewportResponse(BaseModel):
+    name: str
+    viewport: ViewportSchema
+    capture_outcome: ViewportCaptureOutcome
+    horizontal_overflow: HorizontalOverflowSchema | None
+    overflow_analysis_status: OverflowAnalysisStatus
+    element_overflow_diagnosis: ElementOverflowDiagnosisSchema
+    functional_ux_audit: FunctionalUXAuditSchema
+    accessibility_scan: AccessibilityScanSchema
+    finding_normalization: NormalizedFindingsSchema
+    screenshot_ref: str | None
+    details: list[str]
+
+
+class ResponsiveCaptureResponse(BaseModel):
+    requested_url: str
+    viewports: list[ResponsiveViewportResponse]
+    audit_findings: AuditFindingAggregationSchema
+    audit_summary: AuditSummarySchema
+
+    @classmethod
+    def from_results(
+        cls, requested_url: str, results: list[ViewportCaptureResult]
+    ) -> "ResponsiveCaptureResponse":
+        aggregation = aggregate_audit_findings(
+            [
+                finding
+                for result in results
+                for finding in result.finding_normalization.findings
+            ],
+            normalization_statuses=[
+                result.finding_normalization.status for result in results
+            ],
+        )
+        summary = build_audit_summary(aggregation, results)
+        return cls(
+            requested_url=requested_url,
+            audit_summary=AuditSummarySchema(
+                status=summary.status,
+                horizontal_overflow_detected=summary.horizontal_overflow_detected,
+                affected_viewports=summary.affected_viewports,
+                document_level_overflow=DocumentOverflowSummarySchema(
+                    status=summary.document_level_overflow.status,
+                    detected=summary.document_level_overflow.detected,
+                    affected_viewports=summary.document_level_overflow.affected_viewports,
+                    measurements=[
+                        ViewportMeasurementSchema(
+                            name=measurement.name,
+                            width=measurement.width,
+                            overflow_px=measurement.overflow_px,
+                        )
+                        for measurement in summary.document_level_overflow.measurements
+                    ],
+                ),
+                issues=[
+                    AuditSummaryIssueSchema(
+                        group_id=issue.group_id,
+                        rule_id=issue.rule_id,
+                        selector=issue.selector,
+                        priority=issue.priority,
+                        title=issue.title,
+                        affected_viewports=[
+                            IssueViewportSchema(
+                                name=viewport.name, width=viewport.width
+                            )
+                            for viewport in issue.affected_viewports
+                        ],
+                        measurements=[
+                            IssueMeasurementSchema(
+                                finding_id=measurement.finding_id,
+                                viewport_name=measurement.viewport_name,
+                                viewport_width=measurement.viewport_width,
+                                element_overflow_px=measurement.element_overflow_px,
+                                document_overflow_px=measurement.document_overflow_px,
+                                evidence_correlation=measurement.evidence_correlation,
+                            )
+                            for measurement in issue.measurements
+                        ],
+                        explanation=issue.explanation,
+                    )
+                    for issue in summary.issues
+                ],
+                limitations=summary.limitations,
+            ),
+            audit_findings=AuditFindingAggregationSchema(
+                status=aggregation.status,
+                findings=[
+                    AuditFindingGroupSchema(
+                        group_id=group.group_id,
+                        rule_id=group.rule_id,
+                        selector=group.selector,
+                        priority=group.priority,
+                        explanation=group.explanation,
+                        affected_viewports=group.affected_viewports,
+                        findings=group.findings,
+                    )
+                    for group in aggregation.findings
+                ],
+                details=aggregation.details,
+            ),
+            viewports=[
+                ResponsiveViewportResponse(
+                    name=result.name,
+                    viewport=ViewportSchema(
+                        width=result.viewport.width, height=result.viewport.height
+                    ),
+                    capture_outcome=result.capture_outcome,
+                    horizontal_overflow=(
+                        HorizontalOverflowSchema(
+                            scroll_width=result.horizontal_overflow.scroll_width,
+                            visible_width=result.horizontal_overflow.visible_width,
+                            overflow_px=result.horizontal_overflow.overflow_px,
+                            potential_horizontal_overflow=(
+                                result.horizontal_overflow.potential_horizontal_overflow
+                            ),
+                        )
+                        if result.horizontal_overflow is not None
+                        else None
+                    ),
+                    overflow_analysis_status=result.overflow_analysis_status,
+                    element_overflow_diagnosis=ElementOverflowDiagnosisSchema(
+                        status=result.element_overflow_diagnosis.status,
+                        findings=result.element_overflow_diagnosis.findings,
+                        details=result.element_overflow_diagnosis.details,
+                    ),
+                    functional_ux_audit=FunctionalUXAuditSchema(
+                        status=result.functional_ux_audit.status,
+                        findings=[
+                            FunctionalUXFindingSchema(**asdict(finding))
+                            for finding in result.functional_ux_audit.findings
+                        ],
+                        inconclusive=[
+                            FunctionalUXFindingSchema(**asdict(finding))
+                            for finding in result.functional_ux_audit.inconclusive
+                        ],
+                        checked_links=result.functional_ux_audit.checked_links,
+                        checked_images=result.functional_ux_audit.checked_images,
+                        details=result.functional_ux_audit.details,
+                    ),
+                    accessibility_scan=AccessibilityScanSchema(
+                        status=result.accessibility_scan.status,
+                        axe_version=result.accessibility_scan.axe_version,
+                        violations=[
+                            AxeRuleSchema(**asdict(rule))
+                            for rule in result.accessibility_scan.violations
+                        ],
+                        incomplete=[
+                            AxeRuleSchema(**asdict(rule))
+                            for rule in result.accessibility_scan.incomplete
+                        ],
+                        passes=[
+                            AxeRuleSchema(**asdict(rule))
+                            for rule in result.accessibility_scan.passes
+                        ],
+                        inapplicable=[
+                            AxeRuleSchema(**asdict(rule))
+                            for rule in result.accessibility_scan.inapplicable
+                        ],
+                        details=result.accessibility_scan.details,
+                    ),
+                    finding_normalization=NormalizedFindingsSchema(
+                        status=result.finding_normalization.status,
+                        findings=result.finding_normalization.findings,
+                        details=result.finding_normalization.details,
+                    ),
+                    screenshot_ref=result.screenshot_ref,
+                    details=result.details,
+                )
+                for result in results
+            ],
+        )
+
+
+class CaptureErrorResponse(BaseModel):
+    outcome: Literal["invalid_or_prohibited_url", "browser_failure"]
+    detail: str
+
+
+class CaptureErrorEnvelope(BaseModel):
+    detail: CaptureErrorResponse
+
+
+@app.post(
+    "/captures",
+    response_model=ResponsiveCaptureResponse,
+    responses={
+        400: {"model": CaptureErrorEnvelope},
+        502: {"model": CaptureErrorEnvelope},
+    },
+)
+async def create_capture(request: CaptureRequest) -> ResponsiveCaptureResponse:
+    try:
+        await url_validator.validate(request.url)
+
+        async def run_responsive_capture():
+            async with capture_slots:
+                return await capture_responsive_viewports(
+                    request.url,
+                    capture_service.capture,
+                    destination_validator=url_validator,
+                )
+
+        results = await asyncio.wait_for(
+            run_responsive_capture(),
+            timeout=CAPTURE_TIMEOUT_SECONDS,
+        )
+    except UnsafeURL as error:
+        raise HTTPException(
+            status_code=400,
+            detail=CaptureErrorResponse(
+                outcome="invalid_or_prohibited_url", detail=str(error)
+            ).model_dump(),
+        ) from error
+    except TimeoutError as error:
+        raise HTTPException(
+            status_code=502,
+            detail=CaptureErrorResponse(
+                outcome="browser_failure",
+                detail="The capture exceeded its overall time limit.",
+            ).model_dump(),
+        ) from error
+    except BrowserCaptureError as error:
+        raise HTTPException(
+            status_code=502,
+            detail=CaptureErrorResponse(
+                outcome="browser_failure", detail=str(error)
+            ).model_dump(),
+        ) from error
+    except PlaywrightError as error:
+        raise HTTPException(
+            status_code=502,
+            detail=CaptureErrorResponse(
+                outcome="browser_failure",
+                detail="Chromium failed while preparing the capture.",
+            ).model_dump(),
+        ) from error
+    return ResponsiveCaptureResponse.from_results(request.url, results)
