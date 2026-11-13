@@ -35,7 +35,13 @@ export default function ReportAnalytics({ scoring }) {
     statusCounts.set(status, (statusCounts.get(status) || 0) + 1);
   }
   const distribution = [...statusCounts].map(([name, value]) => ({ name, value }));
-  const colors = ["#f5f5f5", "#ff766e", "#f0b84b", "#9b9b9b", "#686868", "#426e80"];
+  const statusColor = (status) => {
+    const normalized = status.toLowerCase();
+    if (/\b(pass|passed|success|completed)\b/.test(normalized)) return "var(--theme-success)";
+    if (/\b(fail|failed|error|critical|blocked)\b/.test(normalized)) return "var(--theme-danger)";
+    if (/\b(warn|warning|moderate|needs review|in progress|partial)\b/.test(normalized)) return "var(--theme-warning)";
+    return "var(--theme-text-muted)";
+  };
 
   return (
     <section className="analytics-section" aria-labelledby="analytics-title">
@@ -52,16 +58,16 @@ export default function ReportAnalytics({ scoring }) {
             <>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={dimensions} margin={{ top: 8, right: 12, left: -18, bottom: 8 }}>
-                  <CartesianGrid stroke="#333" strokeDasharray="3 3" />
-                  <XAxis dataKey="name" tick={{ fill: "#bdbdbd", fontSize: 11 }} />
-                  <YAxis domain={[0, 100]} tick={{ fill: "#a1a1a1", fontSize: 11 }} />
+                  <CartesianGrid stroke="var(--theme-border)" strokeDasharray="3 3" />
+                  <XAxis dataKey="name" tick={{ fill: "var(--theme-text-secondary)", fontSize: 11 }} />
+                  <YAxis domain={[0, 100]} tick={{ fill: "var(--theme-text-muted)", fontSize: 11 }} />
                   <Tooltip
-                    contentStyle={{ background: "#111", border: "1px solid #444" }}
+                    contentStyle={{ background: "var(--theme-container)", border: "1px solid var(--theme-border)", color: "var(--theme-text)" }}
                     formatter={(value, name) => value == null ? "Unavailable" : name === "Score" ? `${value} / 100` : `${value}%`}
                   />
                   <Legend />
-                  <Bar dataKey="Score" fill="#f5f5f5" />
-                  <Bar dataKey="Coverage" fill="#777" />
+                  <Bar dataKey="Score" fill="var(--theme-text)" />
+                  <Bar dataKey="Coverage" fill="var(--theme-text-muted)" />
                 </BarChart>
               </ResponsiveContainer>
               <p className="field-help">Unavailable dimension values are not plotted as zero.</p>
@@ -82,12 +88,12 @@ export default function ReportAnalytics({ scoring }) {
                   paddingAngle={2}
                   label={({ name, value }) => `${name}: ${value}`}
                 >
-                  {distribution.map((item, index) => (
-                    <Cell key={item.name} fill={colors[index % colors.length]} />
+                  {distribution.map((item) => (
+                    <Cell key={item.name} fill={statusColor(item.name)} />
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ background: "#111", border: "1px solid #444" }}
+                  contentStyle={{ background: "var(--theme-container)", border: "1px solid var(--theme-border)", color: "var(--theme-text)" }}
                 />
               </PieChart>
             </ResponsiveContainer>

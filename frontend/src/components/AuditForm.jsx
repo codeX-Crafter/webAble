@@ -1,8 +1,14 @@
 import React from "react";
-export function Header({ onNew, hasResults = false }) {
+export function Header({ onNew, hasResults = false, isLanding = false }) {
   return (
-    <header className="site-header">
+    <header className={`site-header${isLanding ? " landing-header" : ""}`}>
       <a className="brand" href="/">
+        <img
+          className="brand-logo"
+          src={`${import.meta.env.BASE_URL}favicon.svg`}
+          alt=""
+          aria-hidden="true"
+        />
         WebAble
       </a>
       <nav className="site-nav" aria-label="Main navigation">
@@ -15,7 +21,15 @@ export function Header({ onNew, hasResults = false }) {
           <>
             <a href="#how-it-works">How it works</a>
             <a href="#audit-form">Audit</a>
-            <span className="agent-unavailable">Agent · unavailable</span>
+            <span className="agent-unavailable">
+              {isLanding ? (
+                <>
+                  Agent <small>preview</small>
+                </>
+              ) : (
+                "Agent · unavailable"
+              )}
+            </span>
           </>
         )}
       </nav>
@@ -34,12 +48,14 @@ export function AuditForm({
   response,
   onSubmit,
   hidden = false,
+  isLanding = false,
 }) {
   return (
     <form id="audit-form" onSubmit={onSubmit} hidden={hidden}>
       <section className="panel" aria-label="Start an audit">
         <label className="field-label" htmlFor="audit-url">
-          Website URL <span aria-hidden="true">*</span>
+          {isLanding ? "Target website URL" : "Website URL"}{" "}
+          <span aria-hidden="true">*</span>
         </label>
         <input
           id="audit-url"
@@ -47,7 +63,7 @@ export function AuditForm({
           inputMode="url"
           autoComplete="url"
           required
-          placeholder="example.com"
+          placeholder={isLanding ? "https:// acme-corp.com" : "example.com"}
           value={form.url}
           onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))}
         />
@@ -81,7 +97,10 @@ export function AuditForm({
                 ? "Re-scan website →"
                 : "Audit website →"}
           </button>
-          <span>Public websites · axe-core · 3 viewports · Browser tested</span>
+          <span>
+            Public websites · axe-core v4.14 · 3 viewports automated · Real
+            Headless Chromium · Browser tested
+          </span>
         </div>
       </section>
       <div className="form-actions">
